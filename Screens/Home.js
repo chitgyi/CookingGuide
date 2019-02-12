@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import { View, Text, StatusBar, Alert, Image, ScrollView } from "react-native";
-import Icon from "react-native-vector-icons/Entypo";
-import Icons from "react-native-vector-icons/AntDesign";
-import Card from "react-native-cardview";
+import { View, Text, StatusBar, Alert, ListView } from "react-native";
+import Icon from "react-native-vector-icons/AntDesign";
+import CardView from "./CardViewItem";
+import firebase from "react-native-firebase";
+import { RecyclerListView, LayoutProvider } from "recyclerlistview";
 
+const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 export default class Home extends Component {
   static navigationOptions = {
     title: "Cooking Guide",
     headerRight: (
-      <Icons
+      <Icon
         name="form"
         size={25}
         color="#000"
@@ -21,103 +23,57 @@ export default class Home extends Component {
   };
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      postCheck: 0,
+      like: false,
+      liked: 0,
+      hearted: "heart-o",
+      posts: ds
+    };
   }
-
+  componentDidMount() {
+    firebase
+      .database()
+      .ref("posts")
+      .on("value", data => {
+        let val = data.val();
+        let res = [];
+        Object.keys(val).forEach(value => {
+          for (let child in val[value]) {
+            if (!res.includes(child)) {
+              res.push({
+                post: {
+                  uid: value,
+                  pid: child,
+                  postTitle: `${val[value][child].postTitle}`,
+                  postPhoto: `${val[value][child].postPhoto}`,
+                  postCond: `${val[value][child].postCond}`
+                }
+              });
+            }
+          }
+        });
+        this.setState({ posts: ds.cloneWithRows(res) });
+      });
+  }
+  _rowRender(data) {
+    return (
+      <CardView
+        postCond={data.post.postCond}
+        photoUrl={data.post.postPhoto}
+        postTitle={data.post.postTitle}
+      />
+    );
+  }
   render() {
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <ScrollView>
-          <Card style={{ marginTop: 10 }}>
-            <View style={{ flexDirection: "row", paddingTop: 10 }}>
-              <Image
-                style={{ width: 50, height: 50, borderRadius: 25, padding: 10 }}
-                source={require("../Images/user.png")}
-              />
-              <View style={{ flexDirection: "column" }}>
-                <Text style={{ fontSize: 16, color: "black" }}>
-                  Food Name One
-                </Text>
-                <Text>1 day ago</Text>
-              </View>
-            </View>
-            <View style={{ backgroundColor: "gray", height: 1 }} />
-            <Image
-              source={require("../Images/food.jpeg")}
-              style={{ height: 220, width: "100%" }}
-            />
-            <Text style={{ padding: 10 }}>
-              Hello, this is a content of food details and you can follow this
-              steps
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 5
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <Icon name="heart" size={40} style={{ color: "#ad0670" }} />
-                <Icon name="bookmark" size={40} style={{ color: "black" }} />
-              </View>
-              <View style={{ flexDirection: "row", marginRight: 10 }}>
-                <Icons name="leftcircle" size={30} style={{ color: "red" }} />
-                <Text style={{ padding: 4 }}>-6</Text>
-                <Icons
-                  name="rightcircle"
-                  size={30}
-                  style={{ color: "green" }}
-                />
-              </View>
-            </View>
-          </Card>
-          <Card style={{ marginTop: 10 }}>
-            <View style={{ flexDirection: "row", paddingTop: 10 }}>
-              <Image
-                style={{ width: 50, height: 50, borderRadius: 25, padding: 10 }}
-                source={require("../Images/user.png")}
-              />
-              <View style={{ flexDirection: "column" }}>
-                <Text style={{ fontSize: 16, color: "black" }}>
-                  Food Name Two
-                </Text>
-                <Text>2 day ago</Text>
-              </View>
-            </View>
-            <View style={{ backgroundColor: "gray", height: 1 }} />
-            <Image
-              source={require("../Images/food.jpeg")}
-              style={{ height: 220, width: "100%" }}
-            />
-            <Text style={{ padding: 10 }}>
-              Hello, this is a content of food details and you can follow this
-              steps
-            </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                padding: 5
-              }}
-            >
-              <View style={{ flexDirection: "row" }}>
-                <Icon name="heart" size={40} style={{ color: "#ad0670" }} />
-                <Icon name="bookmark" size={40} style={{ color: "black" }} />
-              </View>
-              <View style={{ flexDirection: "row", marginRight: 10 }}>
-                <Icons name="leftcircle" size={30} style={{ color: "red" }} />
-                <Text style={{ padding: 4 }}>-6</Text>
-                <Icons
-                  name="rightcircle"
-                  size={30}
-                  style={{ color: "green" }}
-                />
-              </View>
-            </View>
-          </Card>
-        </ScrollView>
+        <ListView
+          renderRow={this._rowRender}
+          dataSource={this.state.posts}
+          enableEmptySections
+        />
       </View>
     );
   }

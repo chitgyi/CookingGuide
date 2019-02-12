@@ -1,12 +1,15 @@
 import React, { Component } from "react";
-import { Text, View, SafeAreaView, StatusBar } from "react-native";
+import { Text, View, StatusBar } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Home from "react-native-vector-icons/Entypo";
+import Login from "./Screens/Login";
+import Loading from "./Screens/Loading";
 
 import {
   createAppContainer,
   createBottomTabNavigator,
-  createStackNavigator
+  createStackNavigator,
+  createSwitchNavigator
 } from "react-navigation";
 import home from "./Screens/Home";
 import profile from "./Screens/Profile";
@@ -63,5 +66,9 @@ const Taps = createBottomTabNavigator({
     }
   }
 });
-const Page = createAppContainer(Taps);
-export default Page;
+const switchNav = createSwitchNavigator(
+  { Loading, Login, Taps },
+  { initialRouteName: "Loading" }
+);
+
+export default createAppContainer(switchNav);

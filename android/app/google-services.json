@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "199963154125",
+    "firebase_url": "https://chat-4aa5c.firebaseio.com",
+    "project_id": "chat-4aa5c",
+    "storage_bucket": "chat-4aa5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199963154125:android:cbbcdf3191a117a8",
+        "android_client_info": {
+          "package_name": "com.cookingguide"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "199963154125-64j95b8n3201crs2j9otebd4l3pj386i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHicq8sy_U_YtbPS5cuXshpbIii8vq5pM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

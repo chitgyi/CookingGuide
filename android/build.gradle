@@ -10,11 +10,21 @@ buildscript {
     }
     repositories {
         google()
+        mavenLocal()
         jcenter()
+        configurations.all {
+            resolutionStrategy {
+                // react-native-google-analytics-bridge
+                force "com.google.android.gms:play-services-analytics:16.0.1"
+                force "com.google.android.gms:play-services-tagmanager-v4-impl:16.0.1"
+				// react-native-device-info
+                force "com.google.android.gms:play-services-gcm:15.0.0"
+            }
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.4'
-
+        classpath 'com.android.tools.build:gradle:3.2.0'
+	    classpath 'com.google.gms:google-services:4.0.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -23,6 +33,7 @@ buildscript {
 allprojects {
     repositories {
         mavenLocal()
+        mavenCentral()
         google()
         jcenter()
         maven {
@@ -34,6 +45,6 @@ allprojects {
 
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.7'
     distributionUrl = distributionUrl.replace("bin", "all")
 }
