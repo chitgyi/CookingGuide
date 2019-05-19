@@ -1,35 +1,42 @@
 import React, { Component } from "react";
-import { View, Text, StatusBar, Alert, ListView } from "react-native";
+import { View, Text, StatusBar, ListView } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import CardView from "./CardViewItem";
 import firebase from "react-native-firebase";
-import { RecyclerListView, LayoutProvider } from "recyclerlistview";
-
+let nav
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 export default class Home extends Component {
+
   static navigationOptions = {
     title: "Cooking Guide",
     headerRight: (
-      <Icon
+     <View style={{flexDirection: "row"}}>
+        <Icon
         name="form"
         size={25}
         color="#000"
         style={{ height: 25, width: 25, marginRight: 10 }}
-        onPress={() => {
-          Alert.alert("You tapped the button!");
-        }}
+        onPress={() => nav.routeTo("SendPost")}
       />
+       <Icon
+        name="form"
+        size={25}
+        color="#000"
+        style={{ height: 25, width: 25, marginRight: 10 }}
+        onPress={() => nav.routeTo("SendPost")}
+      />
+     </View>
     )
   };
   constructor(props) {
     super(props);
     this.state = {
-      postCheck: 0,
-      like: false,
-      liked: 0,
-      hearted: "heart-o",
       posts: ds
     };
+    nav = this
+  }
+  routeTo = (Name) => {
+    nav.props.navigation.navigate(Name)
   }
   componentDidMount() {
     firebase

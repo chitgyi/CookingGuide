@@ -2,6 +2,7 @@ package com.cookingguide;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
@@ -13,7 +14,6 @@ import io.invertase.firebase.database.RNFirebaseDatabasePackage; // <-- Add this
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.RNFirebasePackage;
 
-import com.kishanjvaghela.cardview.RNCardViewPackage;
 
 import com.oblador.vectoricons.VectorIconsPackage;
 
@@ -45,8 +45,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PickerPackage(),
             new RNFirebasePackage(),
-            new RNCardViewPackage(),
             new FBSDKPackage(mCallbackManager),
             new VectorIconsPackage(),
             new RNGestureHandlerPackage(),
