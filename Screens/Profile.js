@@ -12,16 +12,6 @@ export default class Home extends Component {
     super(props);
   }
   componentDidMount() {
-    firebase
-      .database()
-      .ref("posts/" + firebase.auth().currentUser.uid)
-      .push({
-        postTitle: "Rose is set of Loving...",
-        postPhoto:
-          "https://cdn.pixabay.com/photo/2018/03/02/08/47/rose-3192610_960_720.png",
-        postCond: -1,
-        startedAt: firebase.database.ServerValue.TIMESTAMP
-      });
     this.setState({
       currentUser: firebase.auth().currentUser
     });

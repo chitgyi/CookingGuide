@@ -12,7 +12,7 @@ import com.facebook.appevents.AppEventsLogger;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage; 
 import io.invertase.firebase.database.RNFirebaseDatabasePackage; // <-- Add this line
 import io.invertase.firebase.RNFirebasePackage;
-import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -51,7 +51,8 @@ public class MainApplication extends Application implements ReactApplication {
             new VectorIconsPackage(),
             new RNGestureHandlerPackage(),
             new RNFirebaseAuthPackage(),
-            new RNFirebaseDatabasePackage() 
+            new RNFirebaseDatabasePackage(),
+            new RNFirebaseStoragePackage()
       );
     }
 

@@ -1,4 +1,4 @@
-import React from 'React'
+import React from "React";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Home from "react-native-vector-icons/Entypo";
 import Login from "./Screens/Login";
@@ -16,17 +16,11 @@ import videos from "./Screens/Videos";
 import favorite from "./Screens/Favorite";
 import sendPost from "./Screens/SendPost";
 
-const HomeStack = createStackNavigator(
-  {
-    Home: {
-      screen: home
-    },
-    SendPost: {
-      screen: sendPost
-    }
-  },
-  { initialRouteName: "Home" }
-);
+const HomeStack = createStackNavigator({
+  Home: {
+    screen: home
+  }
+});
 const VideoStack = createStackNavigator({
   Video: {
     screen: videos
@@ -72,8 +66,9 @@ const Taps = createBottomTabNavigator({
     }
   }
 });
+const SendPost = createStackNavigator({SendPost:{screen: sendPost}})
 const switchNav = createSwitchNavigator(
-  { Loading, Login, Taps },
+  { Loading, Login, Taps,  SendPost},
   { initialRouteName: "Loading" }
 );
 
