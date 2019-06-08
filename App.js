@@ -41,28 +41,28 @@ const Taps = createBottomTabNavigator({
     screen: HomeStack,
     navigationOptions: {
       tabBarLabel: "Home",
-      tabBarIcon: ({ tintColor }) => <Home name="home" size={20} />
+      tabBarIcon: ({ tintColor }) => <Home name="home" size={20} color={tintColor}/>
     }
   },
   Video: {
     screen: VideoStack,
     navigationOptions: {
       tabBarLabel: "Video",
-      tabBarIcon: ({ tintColor }) => <Home name="video" size={20} />
+      tabBarIcon: ({ tintColor }) => <Home name="video" size={20} color={tintColor}/>
     }
   },
   Favorite: {
     screen: FavoriteStack,
     navigationOptions: {
-      tabBarLabel: "Favorite",
-      tabBarIcon: ({ tintColor }) => <Home name="heart" size={20} />
+      tabBarLabel: "Saved",
+      tabBarIcon: ({ tintColor }) => <Home name="save" size={20} color={tintColor}/>
     }
   },
   Profile: {
     screen: ProfileStack,
     navigationOptions: {
       tabBarLabel: "Profile",
-      tabBarIcon: ({ tintColor }) => <Icon name="user" size={20} />
+      tabBarIcon: ({ tintColor }) => <Icon name="user" size={20} color={tintColor}/>
     }
   }
 });

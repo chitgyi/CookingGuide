@@ -3,7 +3,7 @@ import { View, Button, StatusBar, ListView } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import CardView from "./CardViewItem";
 import firebase from "react-native-firebase";
-
+import SnackBar from 'react-native-snackbar'
 let nav;
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -24,7 +24,7 @@ export default class Home extends Component {
           size={25}
           color="#000"
           style={{ height: 25, width: 25, marginRight: 10 }}
-          onPress={() => nav.routeTo("SendPost")}
+          // onPress={() => nav.routeTo("SendPost")}
         />
       </View>
     )
@@ -39,29 +39,11 @@ export default class Home extends Component {
   routeTo = Name => {
     nav.props.navigation.navigate(Name);
   };
-  addPost = () => {
-    firebase
-      .database()
-      .ref("Posts/")
-      .push({
-        userId: firebase.auth().currentUser.uid,
-        postTitle: "Rose is set of Loving...",
-        postBody:
-          "aldkfa asodfia ja sdfoias aosidf a a faosd f;la foas lad foasf aldkfjasof aosfasdfalsd fjo asodf asldfjasodif aosdf",
-        photoUrl:
-          "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg/220px-Good_Food_Display_-_NCI_Visuals_Online.jpg",
-        downPost: [],
-        upPost: [],
-        fav: [],
-        startedAt: firebase.database.ServerValue.TIMESTAMP
-      });
-  };
 
-  getData = () => {};
   componentDidMount() {
     firebase
       .database()
-      .ref("posts")
+      .ref("Posts")
       .on("value", data => {
         let val = data.val();
         let res = [];
@@ -72,9 +54,10 @@ export default class Home extends Component {
                 post: {
                   uid: value,
                   pid: child,
-                  postTitle: `${val[value][child].postTitle}`,
-                  postPhoto: `${val[value][child].postPhoto}`,
-                  postCond: `${val[value][child].postCond}`
+                  title: `${val[value][child].title}`,
+                  postBody: `${val[value][child].postBody}`,
+                  url: `${val[value][child].url}`,
+                  createdAt: `${val[value][child].createdAt}`
                 }
               });
             }
@@ -86,9 +69,12 @@ export default class Home extends Component {
   _rowRender(data) {
     return (
       <CardView
-        postCond={data.post.postCond}
-        photoUrl={data.post.postPhoto}
-        postTitle={data.post.postTitle}
+        title={data.post.title}
+        postBody={data.post.postBody}
+        url={data.post.url}
+        pid={data.post.pid}
+        uid={data.post.uid}
+        createdAt={data.post.createdAt}
       />
     );
   }
@@ -96,13 +82,10 @@ export default class Home extends Component {
     return (
       <View style={{ flex: 1 }}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
-        {/* <Button
-          onPress={this.addPost}
-          style={{ backgroundColor: "green" }}
-          title="Add post"
-        />
-        <Button onPress={this.getData} title="Get data" /> */}
-
+        {this.props.navigation.getParam("success")? (SnackBar.show({
+          title: this.props.navigation.getParam("success"),
+          duration: SnackBar.LENGTH_SHORT
+        })): null}
         <ListView
           renderRow={this._rowRender}
           dataSource={this.state.posts}

@@ -12,6 +12,7 @@ export default class Home extends Component {
     super(props);
   }
   componentDidMount() {
+    firebase.auth().currentUser.updateProfile({displayName: "Chit Gyi"})
     this.setState({
       currentUser: firebase.auth().currentUser
     });
@@ -20,6 +21,7 @@ export default class Home extends Component {
     try {
       await firebase.auth().signOut();
       await LoginManager.logOut();
+      
     } catch (e) {
       console.log(e);
     }

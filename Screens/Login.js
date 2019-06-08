@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Text, View, StatusBar, Button } from "react-native";
-import { LoginButton, AccessToken, LoginManager } from "react-native-fbsdk";
+import { AccessToken, LoginManager } from "react-native-fbsdk";
 import firebase from "react-native-firebase";
 export default class Login extends Component {
   state = {};

@@ -5,7 +5,9 @@ import {
   StatusBar,
   ScrollView,
   BackHandler,
-  Platform
+  Platform,
+  Alert,
+  
 } from "react-native";
 import {
   Item,
@@ -14,13 +16,16 @@ import {
   Form,
   Textarea,
   Button,
-  Text
+  Text,
+  Picker,
+  Icon
 } from "native-base";
 import { HeaderBackButton } from "react-navigation";
 import ImagePicker from "react-native-image-crop-picker";
-import uuid from 'react-native-uuid'
+import uuid from "react-native-uuid";
 import firebase from "react-native-firebase";
-
+import { ProgressDialog } from "react-native-simple-dialogs";
+import SnackBar from 'react-native-snackbar'
 export default class SendPost extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Upload",
@@ -30,40 +35,37 @@ export default class SendPost extends Component {
     super(props);
     this.state = {
       imgPath: "empty",
-      loading: 'No'
+      loading: false,
+      selectedValue: "burmese",
+      title: "",
+      postBody: "",
+      url: ''
     };
+  }
+
+  onValueChange2(value) {
+    this.setState({
+      selectedValue: value
+    });
   }
 
   componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", this.back);
   }
 
-  async uploadImage() {
-    const image = this.state.imgPath
-    const imageRef = firebase
-      .storage()
-      .ref("postImages")
-      .child(uuid.v1()+".jpg");
-    let mime = "image/jpg";
-    imageRef
-      .putFile(image, { contentType: mime })
-      .on(firebase.storage.TaskEvent.STATE_CHANGED, snapshot => {
-        this.setState({loading: "Yeah"})
-        if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-          alert(snapshot.downloadURL);
-        }else{
-          alert("Unable to upload..!")
-        }
-      });
-  };
-
+  componentWillUnmount(){
+    BackHandler.removeEventListener("hardwareBackPress", this.back);
+    this.state = {}
+    ImagePicker.clean()
+    
+  }
   back = () => {
     this.props.navigation.navigate("Taps");
     return true;
   };
 
   pickImage = () => {
-    ImagePicker.openPicker({ cropping: true, height: 230, width: 250 })
+    ImagePicker.openPicker({ cropping: true, height: 230, width: 360 })
       .then(image => {
         this.setState({ imgPath: image.path });
       })
@@ -72,10 +74,69 @@ export default class SendPost extends Component {
       });
   };
 
+  showSnack = () => {
+    this.props.navigation.navigate("Taps", {success: "Successfully posted!"})
+    return true
+  }
+
+  sendPost = ()=> {
+    if (this.state.imgPath !== "empty") {
+      if (this.state.title) {
+        if (this.state.postBody) {
+          this.setState({ loading: true });
+          const image = this.state.imgPath;
+          const imageRef = firebase
+            .storage()
+            .ref("postImages")
+            .child(uuid.v1() + ".jpg");
+          let mime = "image/jpg";
+          
+          imageRef
+            .putFile(image, { contentType: mime })
+            .then(snapshot => {
+              if (snapshot.state === firebase.storage.TaskState.SUCCESS) { 
+                this.setState({ loading: false});
+                firebase.database().ref("Posts/"+firebase.auth().currentUser.uid).push({
+                  url: snapshot.downloadURL,
+                  title: this.state.title,
+                  postBody: this.state.postBody,
+                  createdAt: firebase.database.ServerValue.TIMESTAMP,
+                  profilePhoto: firebase.auth().currentUser.photoURL,
+                  displayName: firebase.auth().currentUser.displayName
+                })
+                SnackBar.show({
+                  title: 'Successfully posted!',
+                  duration: SnackBar.LENGTH_LONG,
+                });
+                this.props.navigation.navigate("Taps", {success: "Successfully posted!"})
+                return true
+              } else {
+                Alert.alert("Unable to upload photo");
+              }
+            }).catch(error=>{
+              Alert.alert('An error occurring!')
+            })
+        
+        } else {
+          alert("Enter your food details");
+        }
+      } else {
+        alert("Enter your food name");
+      }
+    } else {
+      alert("Please select your food photo");
+    }
+  }
+
   render() {
     return (
       <ScrollView horizontal={false} style={{ flex: 1 }}>
         <StatusBar barStyle="dark-content" backgroundColor="white" />
+        <ProgressDialog
+          visible={this.state.loading}
+          title="Uploading..."
+          message="Please, wait..."
+        />
         <Content padder>
           <TouchableOpacity
             onPress={this.pickImage}
@@ -97,17 +158,49 @@ export default class SendPost extends Component {
               )}
             </ImageBackground>
           </TouchableOpacity>
-
           <Item regular>
-            <Input placeholder="Food Title" />
+            <Input
+              placeholder="Food Title"
+              onChangeText={value => {
+                this.setState({ title: value });
+              }}
+            />
           </Item>
-          <Form>
-            <Textarea rowSpan={8} bordered placeholder="Details of Food" />
-          </Form>
-          <Button block style={{ marginTop: 7 }} onPress={() => {this.uploadImage()}}>
+          <Item picker regular style={{ marginTop: 5 }}>
+            <Picker
+              mode="dropdown"
+              iosIcon={<Icon name="arrow-down" />}
+              style={{ width: undefined }}
+              placeholder="Select your food type"
+              placeholderStyle={{ color: "#bfc6ea" }}
+              placeholderIconColor="#007aff"
+              selectedValue={this.state.selectedValue}
+              onValueChange={this.onValueChange2.bind(this)}
+            >
+              <Picker.Item label="Burmese Food" value="burmese" />
+              <Picker.Item label="Japanese Food" value="japanese" />
+              <Picker.Item label="Korea Food" value="korea" />
+              <Picker.Item label="Thai Food" value="thai" />
+              <Picker.Item label="Other..." value="other" />
+            </Picker>
+          </Item>
+          <Textarea
+            rowSpan={8}
+            bordered
+            placeholder="Details of Food"
+            onChangeText={value => {
+              this.setState({ postBody: value });
+            }}
+          />
+          <Button
+            block
+            style={{ marginTop: 7 }}
+            onPress={() => {
+             this.showSnack()
+            }}
+          >
             <Text>Send Post</Text>
           </Button>
-          <Text>{this.state.loading}</Text>
         </Content>
       </ScrollView>
     );
