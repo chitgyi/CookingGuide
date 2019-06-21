@@ -5,27 +5,25 @@ import {
   StatusBar,
   ScrollView,
   BackHandler,
-  Platform,
   Alert,
-  
+  Button
 } from "react-native";
 import {
   Item,
   Content,
   Input,
-  Form,
   Textarea,
-  Button,
   Text,
   Picker,
   Icon
 } from "native-base";
+import Toast, { DURATION } from "react-native-easy-toast";
 import { HeaderBackButton } from "react-navigation";
 import ImagePicker from "react-native-image-crop-picker";
 import uuid from "react-native-uuid";
 import firebase from "react-native-firebase";
 import { ProgressDialog } from "react-native-simple-dialogs";
-import SnackBar from 'react-native-snackbar'
+import SnackBar from "react-native-snackbar";
 export default class SendPost extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Upload",
@@ -39,7 +37,7 @@ export default class SendPost extends Component {
       selectedValue: "burmese",
       title: "",
       postBody: "",
-      url: ''
+      url: ""
     };
   }
 
@@ -53,11 +51,10 @@ export default class SendPost extends Component {
     BackHandler.addEventListener("hardwareBackPress", this.back);
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     BackHandler.removeEventListener("hardwareBackPress", this.back);
-    this.state = {}
-    ImagePicker.clean()
-    
+    this.state = {};
+    ImagePicker.clean();
   }
   back = () => {
     this.props.navigation.navigate("Taps");
@@ -75,11 +72,12 @@ export default class SendPost extends Component {
   };
 
   showSnack = () => {
-    this.props.navigation.navigate("Taps", {success: "Successfully posted!"})
-    return true
-  }
-
-  sendPost = ()=> {
+    // this.props.navigation.navigate("Home", { success: "Successfully posted!" });
+    // this.refs.toast.show("Successfully uploaded!", 3000);
+    // return true;
+  };
+ 
+  sendPost = () => {
     if (this.state.imgPath !== "empty") {
       if (this.state.title) {
         if (this.state.postBody) {
@@ -90,33 +88,34 @@ export default class SendPost extends Component {
             .ref("postImages")
             .child(uuid.v1() + ".jpg");
           let mime = "image/jpg";
-          
+
           imageRef
             .putFile(image, { contentType: mime })
             .then(snapshot => {
-              if (snapshot.state === firebase.storage.TaskState.SUCCESS) { 
-                this.setState({ loading: false});
-                firebase.database().ref("Posts/"+firebase.auth().currentUser.uid).push({
-                  url: snapshot.downloadURL,
-                  title: this.state.title,
-                  postBody: this.state.postBody,
-                  createdAt: firebase.database.ServerValue.TIMESTAMP,
-                  profilePhoto: firebase.auth().currentUser.photoURL,
-                  displayName: firebase.auth().currentUser.displayName
-                })
-                SnackBar.show({
-                  title: 'Successfully posted!',
-                  duration: SnackBar.LENGTH_LONG,
+              if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+                this.setState({ loading: false });
+                firebase
+                  .database()
+                  .ref("Posts/" + firebase.auth().currentUser.uid)
+                  .push({
+                    url: snapshot.downloadURL,
+                    title: this.state.title,
+                    postBody: this.state.postBody,
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    profilePhoto: firebase.auth().currentUser.photoURL,
+                    displayName: firebase.auth().currentUser.displayName
+                  });
+                this.props.navigation.navigate("Home", {
+                  success: "Successfully posted!"
                 });
-                this.props.navigation.navigate("Taps", {success: "Successfully posted!"})
-                return true
+                return true;
               } else {
                 Alert.alert("Unable to upload photo");
               }
-            }).catch(error=>{
-              Alert.alert('An error occurring!')
             })
-        
+            .catch(error => {
+              Alert.alert("An error occurring!");
+            });
         } else {
           alert("Enter your food details");
         }
@@ -126,7 +125,7 @@ export default class SendPost extends Component {
     } else {
       alert("Please select your food photo");
     }
-  }
+  };
 
   render() {
     return (
@@ -193,14 +192,12 @@ export default class SendPost extends Component {
             }}
           />
           <Button
-            block
+            title="Send Post"
             style={{ marginTop: 7 }}
             onPress={() => {
-             this.showSnack()
+              this.sendPost();
             }}
-          >
-            <Text>Send Post</Text>
-          </Button>
+          />
         </Content>
       </ScrollView>
     );

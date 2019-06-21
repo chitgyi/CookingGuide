@@ -47,7 +47,7 @@ const Taps = createBottomTabNavigator({
   Video: {
     screen: VideoStack,
     navigationOptions: {
-      tabBarLabel: "Video",
+      tabBarLabel: "FGuide",
       tabBarIcon: ({ tintColor }) => <Home name="video" size={20} color={tintColor}/>
     }
   },

@@ -1,27 +1,32 @@
 import React, { Component } from "react";
 import { View, Text, StatusBar, Alert, Button } from "react-native";
 import firebase from "react-native-firebase";
-import { LoginManager, AccessToken } from "react-native-fbsdk";
+import { ProgressDialog } from "react-native-simple-dialogs";
+import { AccessToken, LoginManager } from "react-native-fbsdk";
 
 export default class Home extends Component {
   static navigationOptions = {
     title: "Cooking Guide"
   };
-  state = { currentUser: null };
+
   constructor(props) {
     super(props);
+    this.state = { currentUser: null, loading: false };
   }
   componentDidMount() {
-    firebase.auth().currentUser.updateProfile({displayName: "Chit Gyi"})
+   // firebase.auth().currentUser.updateProfile({ displayName: "Chit Gyi" });
     this.setState({
       currentUser: firebase.auth().currentUser
     });
   }
-  signOutUser = async () => {
+
+  signOutUser = () => {
     try {
-      await firebase.auth().signOut();
-      await LoginManager.logOut();
-      
+      setTimeout(() => {
+        firebase.auth().signOut();
+        LoginManager.logOut();
+        this.setState({loading: false})
+      }, 5000);
     } catch (e) {
       console.log(e);
     }
@@ -30,8 +35,19 @@ export default class Home extends Component {
     return (
       <View>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <Text> Profile {JSON.stringify(this.state.currentUser)} woo</Text>
-        <Button title="Logout" onPress={this.signOutUser} />
+        <ProgressDialog
+          visible={this.state.loading}
+          title="Logouting..."
+          message="Please, wait..."
+        />
+        <Text> Profile {JSON.stringify(this.state.currentUser)+this.state.loading} woo</Text>
+        <Button title="Logout" onPress={() => {
+          this.setState({loading: true});
+          this.signOutUser()
+          //this.signOutUser();
+          //this.setState({loading: false})
+          } 
+          }/>
       </View>
     );
   }

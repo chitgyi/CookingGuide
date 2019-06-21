@@ -18,15 +18,28 @@ export default class CardViewItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      active: false
+      active: false,
+      likes: 0
     };
   }
   activeHeart = () => {
-    alert(1);
     this.setState({ active: !true });
   };
   dateDiff = previous => {
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "Nobember", "October", "December"]
+    let months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "November",
+      "October",
+      "December"
+    ];
     let prev = parseInt(previous);
     let msPerMin = 60 * 1000;
     let msPerHr = msPerMin * 60;
@@ -49,12 +62,61 @@ export default class CardViewItem extends Component {
       let day = Math.round(dateDiff / msPerDay);
       return day < 1
         ? "Yesterday"
-        : result.getDate() + " "+months[result.getMonth()]+", "+result.getFullYear()
+        : result.getDate() +
+            " " +
+            months[result.getMonth()] +
+            ", " +
+            result.getFullYear();
     }
     if (dateDiff < msPerYear) {
       return Math.round(dateDiff / msPerMonth) + " year ago";
     }
   };
+
+  isLiked = async like => {
+    await firebase
+      .database()
+      .ref("Likes/")
+      .child(this.props.pid)
+      .child(firebase.auth().currentUser.uid)
+      .update({ like: !like });
+    await firebase
+      .database()
+      .ref("Likes/")
+      .child(this.props.pid)
+      .orderByChild("like")
+      .equalTo(true)
+      .once("value", snap => {
+        let like = snap.numChildren();
+        this.setState({ likes: like });
+      });
+  };
+
+  componentDidMount() {
+    this.mounted = true;
+    firebase
+      .database()
+      .ref("Likes/")
+      .child(this.props.pid)
+      .orderByChild("like")
+      .equalTo(true)
+      .once("value", snap => {
+        let like = snap.numChildren();
+        this.setState({ likes: like });
+      });
+    firebase
+      .database()
+      .ref("Likes/")
+      .child(this.props.pid)
+      .child(firebase.auth().currentUser.uid)
+      .once("value", snap => {
+        this.setState({ active: snap.val() ? snap.val().like : false });
+      });
+  }
+  componentWillUnmount() {
+    this.mounted = false;
+    this.setState(null);
+  }
   render() {
     return (
       <Card>
@@ -71,18 +133,18 @@ export default class CardViewItem extends Component {
           <Image
             source={{ uri: this.props.url }}
             resizeMode="cover"
-            style={{ height: 230, width: null, flex: 1 }}
+            style={{ height: 240, width: null, flex: 1 }}
           />
         </CardItem>
         <CardItem>
           <Body>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+            <Text style={{ fontSize: 16, fontWeight: "900" }}>
               {}
               {this.props.title}
             </Text>
-            <Text style={{ fontSize: 14 }}>
+            <Text style={{ fontSize: 14, textAlign: "justify" }}>
               {/* Cooking details and guides. You can cook from this cooking guide... */}
-              {this.props.postBody.substring(1, 100)}......
+              {this.props.postBody.substring(0, 100)}......
             </Text>
           </Body>
         </CardItem>
@@ -90,24 +152,25 @@ export default class CardViewItem extends Component {
           <Left>
             <Icon
               name={this.state.active ? "heart" : "hearto"}
-              color={this.state.active ? "red" : "#333"}
-              size={35}
+              color={this.state.active ? "#ff0080" : "#333"}
+              size={30}
               onPress={() => {
                 this.setState({ active: !this.state.active });
+                let like = this.state.active;
+                this.isLiked(like);
               }}
             />
-            <Text>45 likes</Text>
+            <Text>{this.state.likes>1 ? this.state.likes+" Likes": this.state.likes+" Like"}</Text>
             <Icon
-              style={{ marginLeft: 7 }}
-              name="save"
-              size={35}
-              onPress={() => {
-                this.activeHeart;
-              }}
+              style={{ marginLeft: 10, }}
+              name="star"
+              size={30}
+              color="blue"
+              onPress={() => {}}
             />
           </Left>
           <Right>
-            <Icon name="frown" size={30} />
+            <Icon name="frown" size={30} color="#4f4e4d"/>
           </Right>
         </CardItem>
       </Card>
