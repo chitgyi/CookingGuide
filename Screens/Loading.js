@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Text, View, StatusBar } from "react-native";
+import { Text, View, StatusBar, ActivityIndicator } from "react-native";
 import firebase from "react-native-firebase";
+
 
 export default class Loading extends Component {
   componentDidMount() {
@@ -10,9 +11,9 @@ export default class Loading extends Component {
   }
   render() {
     return (
-      <View>
+      <View style={{alignContent: "center", justifyContent: 'center', flex: 1}}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <Text> Loading </Text>
+        <ActivityIndicator size="large"/>
       </View>
     );
   }

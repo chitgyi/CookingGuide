@@ -3,6 +3,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Home from "react-native-vector-icons/Entypo";
 import Login from "./Screens/Login";
 import Loading from "./Screens/Loading";
+import GuideLine from "./Screens/GuideLine"
+import Splash from "./Screens/Splash"
 
 import {
   createAppContainer,
@@ -68,8 +70,8 @@ const Taps = createBottomTabNavigator({
 });
 const SendPost = createStackNavigator({SendPost:{screen: sendPost}})
 const switchNav = createSwitchNavigator(
-  { Loading, Login, Taps,  SendPost},
-  { initialRouteName: "Loading" }
+  { Loading, Login, Taps,  SendPost, GuideLine, Splash},
+  { initialRouteName: "Splash" }
 );
 
 export default createAppContainer(switchNav);

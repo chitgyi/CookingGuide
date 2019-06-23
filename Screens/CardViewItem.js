@@ -62,9 +62,9 @@ export default class CardViewItem extends Component {
       let day = Math.round(dateDiff / msPerDay);
       return day < 1
         ? "Yesterday"
-        : result.getDate() +
+        : months[result.getMonth()] +
             " " +
-            months[result.getMonth()] +
+            result.getDate() +
             ", " +
             result.getFullYear();
     }
