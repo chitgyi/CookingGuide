@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, } from "react";
 import {
   ImageBackground,
   TouchableOpacity,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   BackHandler,
   Alert,
-  Button
+  Button,
 } from "react-native";
 import {
   Item,

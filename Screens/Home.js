@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { View, Button, Text, StatusBar, ListView } from "react-native";
+import { View, ScrollView, Button, Text, StatusBar, ListView } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import CardView from "./CardViewItem";
 import firebase from "react-native-firebase";
 import SnackBar from "react-native-snackbar";
+import ImageSlider from "./Meals/ImageSlider"
 let nav;
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
@@ -86,8 +87,9 @@ export default class Home extends Component {
   }
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
+        <ImageSlider />
         {this.state.posts ? (
           <ListView
             renderRow={this._rowRender}
@@ -104,7 +106,7 @@ export default class Home extends Component {
               duration: SnackBar.LENGTH_SHORT
             })
           : null}
-      </View>
+      </ScrollView>
     );
   }
 }
