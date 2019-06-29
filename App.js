@@ -16,11 +16,17 @@ import home from "./Screens/Home";
 import profile from "./Screens/Profile";
 import videos from "./Screens/Videos";
 import favorite from "./Screens/Favorite";
-import sendPost from "./Screens/SendPost";
+import sendPost from "./Screens/CreateMeal";
+import categories from './Screens/Categories'
 
 const HomeStack = createStackNavigator({
   Home: {
     screen: home
+  }
+});
+const CategoriesStack = createStackNavigator({
+  Categories: {
+    screen: categories
   }
 });
 const VideoStack = createStackNavigator({
@@ -43,28 +49,45 @@ const Taps = createBottomTabNavigator({
     screen: HomeStack,
     navigationOptions: {
       tabBarLabel: "Home",
-      tabBarIcon: ({ tintColor }) => <Home name="home" size={20} color={tintColor}/>
+      tabBarIcon: ({ tintColor }) => (
+        <Home name="home" size={20} color={tintColor} />
+      )
+    }
+  },
+  Categories: {
+    screen: CategoriesStack,
+    navigationOptions: {
+      tabBarLabel: "Categories",
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="th" size={20} color={tintColor} />
+      )
     }
   },
   Video: {
     screen: VideoStack,
     navigationOptions: {
       tabBarLabel: "FGuide",
-      tabBarIcon: ({ tintColor }) => <Home name="video" size={20} color={tintColor}/>
+      tabBarIcon: ({ tintColor }) => (
+        <Home name="video" size={20} color={tintColor} />
+      )
     }
   },
   Favorite: {
     screen: FavoriteStack,
     navigationOptions: {
       tabBarLabel: "Saved",
-      tabBarIcon: ({ tintColor }) => <Home name="save" size={20} color={tintColor}/>
+      tabBarIcon: ({ tintColor }) => (
+        <Home name="save" size={20} color={tintColor} />
+      )
     }
   },
   Profile: {
     screen: ProfileStack,
     navigationOptions: {
       tabBarLabel: "Profile",
-      tabBarIcon: ({ tintColor }) => <Icon name="user" size={20} color={tintColor}/>
+      tabBarIcon: ({ tintColor }) => (
+        <Icon name="user" size={20} color={tintColor} />
+      )
     }
   }
 });

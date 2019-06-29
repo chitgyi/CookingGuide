@@ -1,4 +1,4 @@
-import React, { Component, } from "react";
+import React, { Component } from "react";
 import {
   ImageBackground,
   TouchableOpacity,
@@ -6,7 +6,7 @@ import {
   ScrollView,
   BackHandler,
   Alert,
-  Button,
+  Button
 } from "react-native";
 import {
   Item,
@@ -34,7 +34,7 @@ export default class SendPost extends Component {
     this.state = {
       imgPath: "empty",
       loading: false,
-      selectedValue: "burmese",
+      selectedValue: "type1",
       title: "",
       postBody: "",
       url: ""
@@ -62,7 +62,7 @@ export default class SendPost extends Component {
   };
 
   pickImage = () => {
-    ImagePicker.openPicker({ cropping: true, height: 230, width: 360 })
+    ImagePicker.openPicker({ cropping: true, height: 300, width: 360 })
       .then(image => {
         this.setState({ imgPath: image.path });
       })
@@ -76,7 +76,7 @@ export default class SendPost extends Component {
     // this.refs.toast.show("Successfully uploaded!", 3000);
     // return true;
   };
- 
+
   sendPost = () => {
     if (this.state.imgPath !== "empty") {
       if (this.state.title) {
@@ -96,14 +96,16 @@ export default class SendPost extends Component {
                 this.setState({ loading: false });
                 firebase
                   .database()
-                  .ref("Posts/" + firebase.auth().currentUser.uid)
+                  .ref("Posts")
                   .push({
+                    uid: firebase.auth().currentUser.uid,
                     url: snapshot.downloadURL,
                     title: this.state.title,
                     postBody: this.state.postBody,
                     createdAt: firebase.database.ServerValue.TIMESTAMP,
                     profilePhoto: firebase.auth().currentUser.photoURL,
-                    displayName: firebase.auth().currentUser.displayName
+                    displayName: firebase.auth().currentUser.displayName,
+                    foodType: this.state.selectedValue
                   });
                 this.props.navigation.navigate("Home", {
                   success: "Successfully posted!"
@@ -176,11 +178,12 @@ export default class SendPost extends Component {
               selectedValue={this.state.selectedValue}
               onValueChange={this.onValueChange2.bind(this)}
             >
-              <Picker.Item label="Burmese Food" value="burmese" />
-              <Picker.Item label="Japanese Food" value="japanese" />
-              <Picker.Item label="Korea Food" value="korea" />
-              <Picker.Item label="Thai Food" value="thai" />
-              <Picker.Item label="Other..." value="other" />
+              <Picker.Item label="အသား/ငါး ဟင္း" value="type1" />
+              <Picker.Item label="အသီးအရြက္ေၾကာ္" value="type2" />
+              <Picker.Item label="အသုတ္မ်ိဳးစံု" value="type3" />
+              <Picker.Item label="အသား/ငါး ေၾကာ္/ေပါင္း" value="type4" />
+              <Picker.Item label="မုန႔္မ်ား" value="type5" />
+              <Picker.Item label="ဟင္းရည္မ်ား" value="type6" />
             </Picker>
           </Item>
           <Textarea
@@ -190,6 +193,7 @@ export default class SendPost extends Component {
             onChangeText={value => {
               this.setState({ postBody: value });
             }}
+            style={{marginBottom: 7}}
           />
           <Button
             title="Send Post"

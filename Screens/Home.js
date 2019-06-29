@@ -1,12 +1,24 @@
 import React, { Component } from "react";
-import { View, ScrollView, Button, Text, StatusBar, ListView } from "react-native";
+import {
+  View,
+  ScrollView,
+  Button,
+  Text,
+  StatusBar,
+  TouchableOpacity,
+  ListView
+} from "react-native";
+
 import Icon from "react-native-vector-icons/AntDesign";
 import CardView from "./CardViewItem";
 import firebase from "react-native-firebase";
 import SnackBar from "react-native-snackbar";
-import ImageSlider from "./Meals/ImageSlider"
+import ImageSlider from "./Meals/ImageSlider";
+import MealItem from "./Meals/MealItem";
+import More from "./Meals/more";
 let nav;
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+const ds2 = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 export default class Home extends Component {
   static navigationOptions = {
@@ -33,73 +45,151 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      posts: ds,
+      post1: ds,
+      post2: ds2
     };
     nav = this;
   }
   routeTo = Name => {
     nav.props.navigation.navigate(Name);
   };
-  componentWillMount(){
-    this.setState(null)
+  componentWillMount() {
+    this.setState(null);
   }
   componentDidMount() {
     try {
       firebase
         .database()
         .ref("Posts")
+        .orderByChild("foodType")
+        .equalTo("type1")
+        .limitToLast(5)
         .on("value", data => {
           let val = data.val();
           let res = [];
           Object.keys(val).forEach(value => {
-            for (let child in val[value]) {
-              if (!res.includes(child)) {
-                res.push({
-                  post: {
-                    uid: value,
-                    pid: child,
-                    title: `${val[value][child].title}`,
-                    postBody: `${val[value][child].postBody}`,
-                    url: `${val[value][child].url}`,
-                    createdAt: `${val[value][child].createdAt}`
-                  }
-                });
+            res.push({
+              post: {
+                pid: value,
+                uid: `${val[value].uid}`,
+                title: `${val[value].title}`,
+                postBody: `${val[value].postBody}`,
+                url: `${val[value].url}`,
+                createdAt: `${val[value].createdAt}`
               }
-            }
+            });
           });
-          this.setState({ posts: ds.cloneWithRows(res) });
+          this.setState({ post1: ds.cloneWithRows(res) });
         });
     } catch (error) {
-      this.state.setState({ posts: null });
+      this.state.setState({ post1: null });
     }
+      try {
+        firebase
+          .database()
+          .ref("Posts")
+          .orderByChild("foodType")
+          .equalTo("type2")
+          .limitToLast(5)
+          .on("value", data => {
+            let val = data.val();
+            let res = [];
+            Object.keys(val).forEach(value => {
+              res.push({
+                post: {
+                  pid: value,
+                  uid: `${val[value].uid}`,
+                  title: `${val[value].title}`,
+                  postBody: `${val[value].postBody}`,
+                  url: `${val[value].url}`,
+                  createdAt: `${val[value].createdAt}`
+                }
+              });
+            });
+            this.setState({ post2: ds2.cloneWithRows(res) });
+          });
+      } catch (error) {
+        this.state.setState({ post2: null });
+      }
   }
   _rowRender(data) {
     return (
-      <CardView
-        title={data.post.title}
-        postBody={data.post.postBody}
-        url={data.post.url}
-        pid={data.post.pid}
-        uid={data.post.uid}
-        createdAt={data.post.createdAt}
-      />
+      // <CardView
+      //   title={data.post.title}
+      //   postBody={data.post.postBody}
+      //   url={data.post.url}
+      //   pid={data.post.pid}
+      //   uid={data.post.uid}
+      //   createdAt={data.post.createdAt}
+      // />
+      <MealItem photoUrl={data.post.url} title={data.post.title} />
     );
   }
   render() {
     return (
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1, backgroundColor: "#eeeeee" }}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <ImageSlider />
-        {this.state.posts ? (
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 20,
+            padding: 5
+          }}
+        >
+          <Text>အသား/ငါး ခ်က္ျပဳတ္နည္း</Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#4168e1",
+              padding: 5,
+              borderRadius: 3
+            }}
+          >
+            <Text style={{ color: "white" }}>See All</Text>
+          </TouchableOpacity>
+        </View>
+        {this.state.post1 ? (
           <ListView
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
             renderRow={this._rowRender}
-            dataSource={this.state.posts}
+            dataSource={this.state.post1}
             enableEmptySections
           />
         ) : (
           <Text style={{}}>No Post Here</Text>
         )}
-
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 20,
+            padding: 5
+          }}
+        >
+          <Text>အသီးအရြက္ေၾကာ္ ျပဳလုပ္နည္း</Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#4168e1",
+              padding: 5,
+              borderRadius: 3
+            }}
+          >
+            <Text style={{ color: "white" }}>See All</Text>
+          </TouchableOpacity>
+        </View>
+        {this.state.post2 ? (
+          <ListView
+            showsHorizontalScrollIndicator={false}
+            horizontal={true}
+            renderRow={this._rowRender}
+            dataSource={this.state.post2}
+            enableEmptySections
+          />
+        ) : (
+          <Text style={{}}>No Post Here</Text>
+        )}
         {this.props.navigation.getParam("success", false)
           ? SnackBar.show({
               title: this.props.navigation.getParam("success", null),
