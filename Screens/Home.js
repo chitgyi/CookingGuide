@@ -3,19 +3,19 @@ import {
   View,
   ScrollView,
   Button,
+  Image,
   Text,
   StatusBar,
   TouchableOpacity,
   ListView
 } from "react-native";
+import { Card, CardItem, } from "native-base";
 
 import Icon from "react-native-vector-icons/AntDesign";
-import CardView from "./CardViewItem";
 import firebase from "react-native-firebase";
 import SnackBar from "react-native-snackbar";
 import ImageSlider from "./Meals/ImageSlider";
 import MealItem from "./Meals/MealItem";
-import More from "./Meals/more";
 let nav;
 const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 const ds2 = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -84,45 +84,55 @@ export default class Home extends Component {
     } catch (error) {
       this.state.setState({ post1: null });
     }
-      try {
-        firebase
-          .database()
-          .ref("Posts")
-          .orderByChild("foodType")
-          .equalTo("type2")
-          .limitToLast(5)
-          .on("value", data => {
-            let val = data.val();
-            let res = [];
-            Object.keys(val).forEach(value => {
-              res.push({
-                post: {
-                  pid: value,
-                  uid: `${val[value].uid}`,
-                  title: `${val[value].title}`,
-                  postBody: `${val[value].postBody}`,
-                  url: `${val[value].url}`,
-                  createdAt: `${val[value].createdAt}`
-                }
-              });
+    try {
+      firebase
+        .database()
+        .ref("Posts")
+        .orderByChild("foodType")
+        .equalTo("type2")
+        .limitToLast(5)
+        .on("value", data => {
+          let val = data.val();
+          let res = [];
+          Object.keys(val).forEach(value => {
+            res.push({
+              post: {
+                pid: value,
+                uid: `${val[value].uid}`,
+                title: `${val[value].title}`,
+                postBody: `${val[value].postBody}`,
+                url: `${val[value].url}`,
+                createdAt: `${val[value].createdAt}`
+              }
             });
-            this.setState({ post2: ds2.cloneWithRows(res) });
           });
-      } catch (error) {
-        this.state.setState({ post2: null });
-      }
+          this.setState({ post2: ds2.cloneWithRows(res) });
+        });
+    } catch (error) {
+      this.state.setState({ post2: null });
+    }
   }
   _rowRender(data) {
     return (
-      // <CardView
-      //   title={data.post.title}
-      //   postBody={data.post.postBody}
-      //   url={data.post.url}
-      //   pid={data.post.pid}
-      //   uid={data.post.uid}
-      //   createdAt={data.post.createdAt}
-      // />
-      <MealItem photoUrl={data.post.url} title={data.post.title} />
+      <Card style={{ width: 180 }}>
+        <TouchableOpacity
+          onPress={() => this.props.navigation.navigate("ViewPost", {details: "data"})}
+        >
+          <CardItem cardBody bordered>
+            <Image
+              source={{ uri: data.post.url }}
+              resizeMode="contain"
+              resizeMethod="resize"
+              style={{ width: 180, height: 150 }}
+            />
+          </CardItem>
+          <CardItem footer>
+            <Text style={{ fontSize: 12 }}>
+              {data.post.title}
+            </Text>
+          </CardItem>
+        </TouchableOpacity>
+      </Card>
     );
   }
   render() {
@@ -144,6 +154,11 @@ export default class Home extends Component {
               backgroundColor: "#4168e1",
               padding: 5,
               borderRadius: 3
+            }}
+            onPress={() => {
+              this.props.navigation.navigate("ViewPost", {
+                success: "Successfully posted!"
+              },);
             }}
           >
             <Text style={{ color: "white" }}>See All</Text>

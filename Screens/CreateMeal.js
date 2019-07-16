@@ -17,13 +17,12 @@ import {
   Picker,
   Icon
 } from "native-base";
-import Toast, { DURATION } from "react-native-easy-toast";
 import { HeaderBackButton } from "react-navigation";
 import ImagePicker from "react-native-image-crop-picker";
 import uuid from "react-native-uuid";
 import firebase from "react-native-firebase";
-import { ProgressDialog } from "react-native-simple-dialogs";
-import SnackBar from "react-native-snackbar";
+import Spinner from "react-native-loading-spinner-overlay";
+
 export default class SendPost extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Upload",
@@ -132,12 +131,12 @@ export default class SendPost extends Component {
   render() {
     return (
       <ScrollView horizontal={false} style={{ flex: 1 }}>
-        <StatusBar barStyle="dark-content" backgroundColor="white" />
-        <ProgressDialog
+        <Spinner
           visible={this.state.loading}
-          title="Uploading..."
-          message="Please, wait..."
+          textContent={"Creating Meal"}
+          textStyle={{ color: "#FFFFFF" }}
         />
+        <StatusBar barStyle="dark-content" backgroundColor="white" />
         <Content padder>
           <TouchableOpacity
             onPress={this.pickImage}
@@ -193,7 +192,7 @@ export default class SendPost extends Component {
             onChangeText={value => {
               this.setState({ postBody: value });
             }}
-            style={{marginBottom: 7}}
+            style={{ marginBottom: 7 }}
           />
           <Button
             title="Send Post"

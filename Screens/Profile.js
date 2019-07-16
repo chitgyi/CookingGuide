@@ -39,13 +39,12 @@ export default class Home extends Component {
   render() {
     return (
       <ScrollView horizontal={false} style={{ padding: 5 }}>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <Spinner
           visible={this.state.loading}
           textContent={"Logging out..."}
-          textStyle={{color: "#FFFFFF"}}
+          textStyle={{ color: "#FFFFFF" }}
         />
-        
+        <StatusBar backgroundColor="white" barStyle="dark-content" />
         <Card>
           <CardItem>
             <Left>

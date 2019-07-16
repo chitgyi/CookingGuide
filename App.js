@@ -18,6 +18,7 @@ import videos from "./Screens/Videos";
 import favorite from "./Screens/Favorite";
 import sendPost from "./Screens/CreateMeal";
 import categories from './Screens/Categories'
+import viewPost from './Screens/ViewPost'
 
 const HomeStack = createStackNavigator({
   Home: {
@@ -42,6 +43,11 @@ const FavoriteStack = createStackNavigator({
 const ProfileStack = createStackNavigator({
   Profile: {
     screen: profile
+  }
+});
+const ViewPost = createStackNavigator({
+  ViewPost: {
+    screen: viewPost
   }
 });
 const Taps = createBottomTabNavigator({
@@ -93,7 +99,7 @@ const Taps = createBottomTabNavigator({
 });
 const SendPost = createStackNavigator({SendPost:{screen: sendPost}})
 const switchNav = createSwitchNavigator(
-  { Loading, Login, Taps,  SendPost, GuideLine, Splash},
+  { Loading, Login, Taps,  SendPost, GuideLine, Splash, ViewPost},
   { initialRouteName: "Splash" }
 );
 

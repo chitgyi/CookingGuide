@@ -1,9 +1,27 @@
 import React, { Component } from "react";
-import { Text, View, StatusBar, Button } from "react-native";
-import { AccessToken, LoginManager } from "react-native-fbsdk";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Button,
+  TouchableHighlight,
+  Image,
+  Alert,
+  StatusBar
+} from "react-native";
+import { AccessToken, LoginManager, LoginButton } from "react-native-fbsdk";
 import firebase from "react-native-firebase";
-export default class Login extends Component {
-  state = {};
+import Icon from "react-native-vector-icons/FontAwesome";
+export default class LoginView extends Component {
+  constructor(props) {
+    super(props);
+    state = {
+      email: "",
+      password: ""
+    };
+  }
+
   async facebookLogin() {
     try {
       await LoginManager.logInWithReadPermissions(["public_profile", "email"]);
@@ -16,13 +34,124 @@ export default class Login extends Component {
       alert("Login failed, try again!" + e.message);
     }
   }
+
+  onClickListener = viewId => {
+    Alert.alert("Alert", "Button pressed " + viewId);
+  };
+
   render() {
     return (
-      <View>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <Text> Login </Text>
-        <Button title="Login" onPress={this.facebookLogin} />
+      <View style={styles.container}>
+        <StatusBar backgroundColor="#DCDCDC" barStyle="dark-content" />
+        <View style={styles.inputContainer}>
+          <Image
+            style={styles.inputIcon}
+            source={{
+              uri: "https://png.icons8.com/message/ultraviolet/50/3498db"
+            }}
+          />
+          <TextInput
+            style={styles.inputs}
+            placeholder="Email"
+            keyboardType="email-address"
+            underlineColorAndroid="transparent"
+            onChangeText={email => this.setState({ email })}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Image
+            style={styles.inputIcon}
+            source={{
+              uri: "https://png.icons8.com/key-2/ultraviolet/50/3498db"
+            }}
+          />
+          <TextInput
+            style={styles.inputs}
+            placeholder="Password"
+            secureTextEntry={true}
+            underlineColorAndroid="transparent"
+            onChangeText={password => this.setState({ password })}
+          />
+        </View>
+
+        <TouchableHighlight
+          style={[styles.buttonContainer, styles.loginButton]}
+          onPress={() => this.onClickListener("login")}
+        >
+          <Text style={styles.loginText}>Login</Text>
+        </TouchableHighlight>
+        <TouchableHighlight
+          style={[styles.buttonContainer, styles.loginButton]}
+          onPress={this.facebookLogin}
+        >
+          <View style={{flexDirection: "row"}}>
+            <Icon name="facebook" size={25} color="white" style={{marginRight: 10}} />
+            <Text style={styles.loginText}>Facebook Login</Text>
+          </View>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          style={styles.buttonContainer}
+          onPress={() => this.onClickListener("restore_password")}
+        >
+          <Text>Forgot your password?</Text>
+        </TouchableHighlight>
+
+        <TouchableHighlight
+          style={styles.buttonContainer}
+          onPress={() => this.onClickListener("register")}
+        >
+          <Text>Register</Text>
+        </TouchableHighlight>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#DCDCDC"
+  },
+  inputContainer: {
+    borderBottomColor: "#F5FCFF",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 30,
+    borderBottomWidth: 1,
+    width: 250,
+    height: 45,
+    marginBottom: 20,
+    flexDirection: "row",
+    alignItems: "center"
+  },
+  inputs: {
+    height: 45,
+    marginLeft: 16,
+    borderBottomColor: "#FFFFFF",
+    flex: 1
+  },
+  inputIcon: {
+    width: 30,
+    height: 30,
+    marginLeft: 15,
+    justifyContent: "center"
+  },
+  buttonContainer: {
+    height: 45,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+    width: 250,
+    borderRadius: 30
+  },
+  loginButton: {
+    backgroundColor: "#00b5ec"
+  },
+  loginText: {
+    color: "white"
+  }
+});
