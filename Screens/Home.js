@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ListView
 } from "react-native";
-import { Card, CardItem, } from "native-base";
+import { Card, CardItem } from "native-base";
 
 import Icon from "react-native-vector-icons/AntDesign";
 import firebase from "react-native-firebase";
@@ -69,16 +69,17 @@ export default class Home extends Component {
           let res = [];
           Object.keys(val).forEach(value => {
             res.push({
-              post: {
-                pid: value,
-                uid: `${val[value].uid}`,
-                title: `${val[value].title}`,
-                postBody: `${val[value].postBody}`,
-                url: `${val[value].url}`,
-                createdAt: `${val[value].createdAt}`
-              }
+              pid: value,
+              uid: `${val[value].uid}`,
+              title: `${val[value].title}`,
+              postBody: `${val[value].postBody}`,
+              url: `${val[value].url}`,
+              createdAt: `${val[value].createdAt}`,
+              displayName: `${val[value].displayName}`,
+              profilePhoto: `${val[value].profilePhoto}`
             });
           });
+
           this.setState({ post1: ds.cloneWithRows(res) });
         });
     } catch (error) {
@@ -96,14 +97,14 @@ export default class Home extends Component {
           let res = [];
           Object.keys(val).forEach(value => {
             res.push({
-              post: {
-                pid: value,
-                uid: `${val[value].uid}`,
-                title: `${val[value].title}`,
-                postBody: `${val[value].postBody}`,
-                url: `${val[value].url}`,
-                createdAt: `${val[value].createdAt}`
-              }
+              pid: value,
+              uid: `${val[value].uid}`,
+              title: `${val[value].title}`,
+              postBody: `${val[value].postBody}`,
+              url: `${val[value].url}`,
+              createdAt: `${val[value].createdAt}`,
+              displayName: `${val[value].displayName}`,
+              profilePhoto: `${val[value].profilePhoto}`
             });
           });
           this.setState({ post2: ds2.cloneWithRows(res) });
@@ -116,20 +117,20 @@ export default class Home extends Component {
     return (
       <Card style={{ width: 180 }}>
         <TouchableOpacity
-          onPress={() => this.props.navigation.navigate("ViewPost", {details: "data"})}
+          onPress={() =>
+            nav.props.navigation.navigate("ViewPost", { details: data })
+          }
         >
           <CardItem cardBody bordered>
             <Image
-              source={{ uri: data.post.url }}
+              source={{ uri: data.url }}
               resizeMode="contain"
               resizeMethod="resize"
               style={{ width: 180, height: 150 }}
             />
           </CardItem>
           <CardItem footer>
-            <Text style={{ fontSize: 12 }}>
-              {data.post.title}
-            </Text>
+            <Text style={{ fontSize: 12 }}>{data.title}</Text>
           </CardItem>
         </TouchableOpacity>
       </Card>
@@ -158,7 +159,7 @@ export default class Home extends Component {
             onPress={() => {
               this.props.navigation.navigate("ViewPost", {
                 success: "Successfully posted!"
-              },);
+              });
             }}
           >
             <Text style={{ color: "white" }}>See All</Text>

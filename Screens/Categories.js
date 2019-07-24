@@ -9,7 +9,7 @@ export default class Categories extends Component {
     return (
         <View>
             <StatusBar barStyle="dark-content" backgroundColor="white" />
-        <Text> Categories5 </Text>
+        <Text> Categories </Text>
       </View>
     );
   }

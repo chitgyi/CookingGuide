@@ -3,8 +3,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Home from "react-native-vector-icons/Entypo";
 import Login from "./Screens/Login";
 import Loading from "./Screens/Loading";
-import GuideLine from "./Screens/GuideLine"
-import Splash from "./Screens/Splash"
+import GuideLine from "./Screens/GuideLine";
+import Splash from "./Screens/Splash";
 
 import {
   createAppContainer,
@@ -17,14 +17,24 @@ import profile from "./Screens/Profile";
 import videos from "./Screens/Videos";
 import favorite from "./Screens/Favorite";
 import sendPost from "./Screens/CreateMeal";
-import categories from './Screens/Categories'
-import viewPost from './Screens/ViewPost'
+import categories from "./Screens/Categories";
+import viewPost from "./Screens/ViewPost";
+import viewSavePost from "./Screens/ViewSavedPost"
 
-const HomeStack = createStackNavigator({
-  Home: {
-    screen: home
-  }
-});
+const HomeStack = createStackNavigator(
+  {
+    Home: {
+      screen: home
+    },
+    ViewPost: {
+      screen: viewPost
+    },
+    SendPost: {
+      screen: sendPost
+    }
+  },
+  { initialRouteName: "Home" }
+);
 const CategoriesStack = createStackNavigator({
   Categories: {
     screen: categories
@@ -38,18 +48,17 @@ const VideoStack = createStackNavigator({
 const FavoriteStack = createStackNavigator({
   Favorite: {
     screen: favorite
+  },
+  ViewSavedPost: {
+    screen : viewSavePost
   }
-});
+}, {initialRouteName: "Favorite"});
 const ProfileStack = createStackNavigator({
   Profile: {
     screen: profile
   }
 });
-const ViewPost = createStackNavigator({
-  ViewPost: {
-    screen: viewPost
-  }
-});
+
 const Taps = createBottomTabNavigator({
   Home: {
     screen: HomeStack,
@@ -97,9 +106,9 @@ const Taps = createBottomTabNavigator({
     }
   }
 });
-const SendPost = createStackNavigator({SendPost:{screen: sendPost}})
+
 const switchNav = createSwitchNavigator(
-  { Loading, Login, Taps,  SendPost, GuideLine, Splash, ViewPost},
+  { Loading, Login, Taps, GuideLine, Splash },
   { initialRouteName: "Splash" }
 );
 

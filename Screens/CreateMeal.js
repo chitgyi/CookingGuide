@@ -26,7 +26,7 @@ import Spinner from "react-native-loading-spinner-overlay";
 export default class SendPost extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Upload",
-    headerLeft: <HeaderBackButton onPress={() => navigation.navigate("Taps")} />
+    headerLeft: <HeaderBackButton onPress={() => navigation.pop()} />
   });
   constructor(props) {
     super(props);
@@ -56,7 +56,7 @@ export default class SendPost extends Component {
     ImagePicker.clean();
   }
   back = () => {
-    this.props.navigation.navigate("Taps");
+    this.props.navigation.pop();
     return true;
   };
 
@@ -134,7 +134,7 @@ export default class SendPost extends Component {
         <Spinner
           visible={this.state.loading}
           textContent={"Creating Meal"}
-          textStyle={{ color: "#FFFFFF" }}
+          textStyle={{ color: "blue" }}
         />
         <StatusBar barStyle="dark-content" backgroundColor="white" />
         <Content padder>

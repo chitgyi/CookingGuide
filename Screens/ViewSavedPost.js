@@ -88,7 +88,7 @@ export default class ViewPost extends Component {
       });
   };
 
-  isSaved = saved => {
+  isSaved = async saved => {
     firebase
       .database()
       .ref("Saved")
@@ -97,6 +97,15 @@ export default class ViewPost extends Component {
       .update({ saved: !saved });
   };
   componentWillMount() {
+    firebase
+      .database()
+      .ref("Saved")
+      .child(firebase.auth().currentUser.uid)
+      .child(this.props.navigation.state.params.details.pid)
+      .once("value", snap => {
+        let cond = snap.val() ? snap.val().saved : false;
+        this.setState({ saved: cond });
+      });
     firebase
       .database()
       .ref("Likes")
@@ -117,17 +126,8 @@ export default class ViewPost extends Component {
       });
   }
   componentDidMount() {
-    firebase
-      .database()
-      .ref("Saved")
-      .child(firebase.auth().currentUser.uid)
-      .child(this.props.navigation.state.params.details.pid)
-      .once("value", snap => {
-        let cond = snap.val() ? snap.val().saved : false;
-        this.setState({ saved: cond});
-      });
+    
   }
-
 
   render() {
     return (
@@ -137,16 +137,21 @@ export default class ViewPost extends Component {
           <Left>
             <Thumbnail
               source={{
-                uri: this.props.navigation.state.params.details.profilePhoto
+                uri: this.props.navigation.state.params.details.details
+                  .profilePhoto
               }}
             />
             <Body>
               <Text style={{ color: "#000" }}>
-                {this.props.navigation.state.params.details.displayName}
+                {
+                  this.props.navigation.state.params.details.details
+                    .displayName
+                }
               </Text>
               <Text style={{ fontSize: 12 }}>
                 {this.dateDiff(
-                  this.props.navigation.state.params.details.createdAt
+                  this.props.navigation.state.params.details.details
+                    .createdAt
                 )}
               </Text>
             </Body>
@@ -156,7 +161,7 @@ export default class ViewPost extends Component {
         <CardItem cardBody bordered>
           <Image
             source={{
-              uri: this.props.navigation.state.params.details.url
+              uri: this.props.navigation.state.params.details.details.url
             }}
             resizeMode="cover"
             style={{
@@ -169,7 +174,7 @@ export default class ViewPost extends Component {
         </CardItem>
 
         <Text style={{ fontSize: 16, padding: 10, color: "#000" }}>
-          {this.props.navigation.state.params.details.title}
+          {this.props.navigation.state.params.details.details.title}
         </Text>
 
         <View
@@ -224,7 +229,7 @@ export default class ViewPost extends Component {
             textAlign: "justify"
           }}
         >
-          {this.props.navigation.state.params.details.postBody}
+          {this.props.navigation.state.params.details.details.postBody}
         </Text>
       </ScrollView>
     );
