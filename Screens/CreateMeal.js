@@ -15,7 +15,7 @@ import {
   Textarea,
   Text,
   Picker,
-  Icon
+  Icon, Root, Toast
 } from "native-base";
 import { HeaderBackButton } from "react-navigation";
 import ImagePicker from "react-native-image-crop-picker";
@@ -106,9 +106,8 @@ export default class SendPost extends Component {
                     displayName: firebase.auth().currentUser.displayName,
                     foodType: this.state.selectedValue
                   });
-                this.props.navigation.navigate("Home", {
-                  success: "Successfully posted!"
-                });
+                Toast.show({text: "Created Meal Successfully!", duration: 1500, type: "success"})
+                this.props.navigation.pop();
                 return true;
               } else {
                 Alert.alert("Unable to upload photo");

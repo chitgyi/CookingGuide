@@ -11,7 +11,8 @@ import Icon from "react-native-vector-icons/AntDesign";
 import firebase from "react-native-firebase";
 import { CardItem, Left, Body, Thumbnail, Toast, Root } from "native-base";
 import { HeaderBackButton } from "react-navigation";
-import { Dialog, ConfirmDialog } from "react-native-simple-dialogs";
+import { Dialog } from "react-native-simple-dialogs";
+
 
 export default class MyPostedView extends Component {
   static navigationOptions = ({ navigation }) => ({
@@ -25,13 +26,15 @@ export default class MyPostedView extends Component {
       likes: 0,
       saved: false,
       deleting: false,
-      showConfrim: false
+      showSanck: false
     };
   }
   activeHeart = () => {
     this.setState({ active: !true });
   };
-  _showTost = msg => {};
+  _showTost = msg => {
+    Toast.show({ text: msg, duration: 1500 });
+  };
   dateDiff = previous => {
     let months = [
       "January",
@@ -145,11 +148,11 @@ export default class MyPostedView extends Component {
     });
     this.props.navigation.pop();
   };
+
   _deletePost = () => {
     this.setState({
       deleting: true
     });
-    return null;
     let str = this.props.navigation.state.params.details.url.substring(82, 122);
     firebase
       .storage()
@@ -161,6 +164,7 @@ export default class MyPostedView extends Component {
           .ref("Posts/" + this.props.navigation.state.params.details.pid)
           .remove()
           .then(removed => {
+            Toast.show({text: "Deleted Successfully!", duration: 1500, type: "warning"})
             this._back();
           })
           .catch(err => {});
@@ -171,19 +175,16 @@ export default class MyPostedView extends Component {
         });
         alert("Can't Delete!");
       });
-    this.setState({
-      deleting: false
-    });
   };
 
   render() {
     return (
       <Root>
-        <Dialog
-          visible={this.state.deleting}
-          onTouchOutside={() => this.setState({ deleting: false })}
-        >
-          <StatusBar barStyle="light-content" backgroundColor="rgba(0,0,0,.7)" />
+        <Dialog visible={this.state.deleting}>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="rgba(0,0,0,.7)"
+          />
           <View style={{ flexDirection: "row", padding: 10 }}>
             <ActivityIndicator size="large" color="red" />
             <View style={{ justifyContent: "center" }}>
@@ -289,7 +290,9 @@ export default class MyPostedView extends Component {
                 },
                 {
                   text: "Ok",
-                  onPress: () => this._deletePost()
+                  onPress: () => {
+                    this._deletePost();
+                  }
                 }
               ]);
             }}

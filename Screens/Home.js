@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ListView
 } from "react-native";
-import { Card, CardItem } from "native-base";
+import { Card, CardItem,Root } from "native-base";
 
 import Icon from "react-native-vector-icons/AntDesign";
 import firebase from "react-native-firebase";
@@ -138,81 +138,83 @@ export default class Home extends Component {
   }
   render() {
     return (
-      <ScrollView style={{ flex: 1, backgroundColor: "#eeeeee" }}>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <ImageSlider />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 20,
-            padding: 5
-          }}
-        >
-          <Text>အသား/ငါး ခ်က္ျပဳတ္နည္း</Text>
-          <TouchableOpacity
+      <Root>
+        <ScrollView style={{ flex: 1, backgroundColor: "#eeeeee" }}>
+          <StatusBar backgroundColor="white" barStyle="dark-content" />
+          <ImageSlider />
+          <View
             style={{
-              backgroundColor: "#4168e1",
-              padding: 5,
-              borderRadius: 3
-            }}
-            onPress={() => {
-              // this.props.navigation.navigate("ViewPost", {
-              //   success: "Successfully posted!"
-              // });
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 20,
+              padding: 5
             }}
           >
-            <Text style={{ color: "white" }}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        {this.state.post1 ? (
-          <ListView
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            renderRow={this._rowRender}
-            dataSource={this.state.post1}
-            enableEmptySections
-          />
-        ) : (
-          <Text style={{}}>No Post Here</Text>
-        )}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 20,
-            padding: 5
-          }}
-        >
-          <Text>အသီးအရြက္ေၾကာ္ ျပဳလုပ္နည္း</Text>
-          <TouchableOpacity
+            <Text>အသား/ငါး ခ်က္ျပဳတ္နည္း</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#4168e1",
+                padding: 5,
+                borderRadius: 3
+              }}
+              onPress={() => {
+                // this.props.navigation.navigate("ViewPost", {
+                //   success: "Successfully posted!"
+                // });
+              }}
+            >
+              <Text style={{ color: "white" }}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          {this.state.post1 ? (
+            <ListView
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              renderRow={this._rowRender}
+              dataSource={this.state.post1}
+              enableEmptySections
+            />
+          ) : (
+            <Text style={{}}>No Post Here</Text>
+          )}
+          <View
             style={{
-              backgroundColor: "#4168e1",
-              padding: 5,
-              borderRadius: 3
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginTop: 20,
+              padding: 5
             }}
           >
-            <Text style={{ color: "white" }}>See All</Text>
-          </TouchableOpacity>
-        </View>
-        {this.state.post2 ? (
-          <ListView
-            showsHorizontalScrollIndicator={false}
-            horizontal={true}
-            renderRow={this._rowRender}
-            dataSource={this.state.post2}
-            enableEmptySections
-          />
-        ) : (
-          <Text style={{}}>No Post Here</Text>
-        )}
-        {this.props.navigation.getParam("success", false)
-          ? SnackBar.show({
-              title: this.props.navigation.getParam("success", null),
-              duration: SnackBar.LENGTH_SHORT
-            })
-          : null}
-      </ScrollView>
+            <Text>အသီးအရြက္ေၾကာ္ ျပဳလုပ္နည္း</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#4168e1",
+                padding: 5,
+                borderRadius: 3
+              }}
+            >
+              <Text style={{ color: "white" }}>See All</Text>
+            </TouchableOpacity>
+          </View>
+          {this.state.post2 ? (
+            <ListView
+              showsHorizontalScrollIndicator={false}
+              horizontal={true}
+              renderRow={this._rowRender}
+              dataSource={this.state.post2}
+              enableEmptySections
+            />
+          ) : (
+            <Text style={{}}>No Post Here</Text>
+          )}
+          {/* {this.props.navigation.getParam("success", false)
+            ? SnackBar.show({
+                title: this.props.navigation.getParam("success", null),
+                duration: SnackBar.LENGTH_SHORT
+              })
+            : null} */}
+        </ScrollView>
+      </Root>
     );
   }
 }

@@ -10,7 +10,7 @@ import {
   RefreshControl
 } from "react-native";
 import firebase from "react-native-firebase";
-import { Card } from "native-base";
+import { Card, Root } from "native-base";
 
 var nav;
 export default class MyPost extends Component {
@@ -100,26 +100,28 @@ export default class MyPost extends Component {
   }
   render() {
     return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
-        
-        <FlatList
-          refreshControl={
-            <RefreshControl
-              onRefresh={this.loadData}
-              refreshing={this.state.refreshing}
-            />
-          }
-          renderItem={this._rowRender}
-          data={this.state.posts === "empty" ? [] : this.state.posts}
-          keyExtractor={(item, index) => index.toString()}
-        />
-        {this.state.posts === "empty" ? (
-          <Text style={{ alignSelf: "center", position: "absolute" }}>
-            No Post Here
-          </Text>
-        ) : null}
-      </View>
+      <Root>
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <StatusBar backgroundColor="white" barStyle="dark-content" />
+
+          <FlatList
+            refreshControl={
+              <RefreshControl
+                onRefresh={this.loadData}
+                refreshing={this.state.refreshing}
+              />
+            }
+            renderItem={this._rowRender}
+            data={this.state.posts === "empty" ? [] : this.state.posts}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          {this.state.posts === "empty" ? (
+            <Text style={{ alignSelf: "center", position: "absolute" }}>
+              No Post Here
+            </Text>
+          ) : null}
+        </View>
+      </Root>
     );
   }
 }
