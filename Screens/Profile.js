@@ -1,13 +1,17 @@
 import React, { Component } from "react";
-import { ScrollView, Text, StatusBar, Button } from "react-native";
+import {
+  ScrollView,
+  Text,
+  StatusBar,
+  Button,
+  TouchableOpacity
+} from "react-native";
 import firebase from "react-native-firebase";
-import { ProgressDialog } from "react-native-simple-dialogs";
 import { LoginManager } from "react-native-fbsdk";
 import { Card, CardItem, Left, Right, Thumbnail, Icon } from "native-base";
-import Icons from "react-native-vector-icons/MaterialIcons"
+import Icons from "react-native-vector-icons/MaterialIcons";
 import Spinner from "react-native-loading-spinner-overlay";
-
-
+var nav;
 export default class Home extends Component {
   static navigationOptions = {
     title: "Cooking Guide"
@@ -16,6 +20,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = { currentUser: null, loading: false };
+    nav = this;
   }
   componentDidMount() {
     // firebase.auth().currentUser.updateProfile({ displayName: "Chit Gyi" });
@@ -30,12 +35,16 @@ export default class Home extends Component {
         firebase.auth().signOut();
         LoginManager.logOut();
         this.setState({ loading: false });
-        this.props.navigation.navigate("Loading")
+        this.props.navigation.navigate("Loading");
       }, 5000);
     } catch (e) {
       console.log(e);
     }
   };
+  _myPost = () => {
+    this.props.navigation.navigate("MyPost");
+  };
+
   render() {
     return (
       <ScrollView horizontal={false} style={{ padding: 5 }}>
@@ -58,17 +67,20 @@ export default class Home extends Component {
           </CardItem>
         </Card>
         <Card>
-          <CardItem bordered>
-            <Left>
-              <Icons name="restaurant-menu" size={30} />
-              <Text style={{ marginLeft: 7, color: "#000" }}>
-                Your Recipes
-              </Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </CardItem>
+          <TouchableOpacity onPress={this._myPost}>
+            <CardItem bordered>
+              <Left>
+                <Icons name="restaurant-menu" size={30} />
+                <Text style={{ marginLeft: 7, color: "#000" }}>
+                  Your Recipes
+                </Text>
+              </Left>
+
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </CardItem>
+          </TouchableOpacity>
           <CardItem bordered>
             <Left>
               <Icons name="feedback" size={30} />
@@ -92,9 +104,7 @@ export default class Home extends Component {
           <CardItem bordered>
             <Left>
               <Icons name="share" size={30} />
-              <Text style={{ marginLeft: 7, color: "#000" }}>
-                Share App
-              </Text>
+              <Text style={{ marginLeft: 7, color: "#000" }}>Share App</Text>
             </Left>
             <Right>
               <Icon name="arrow-forward" />

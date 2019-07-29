@@ -20,7 +20,7 @@ export default class Favorite extends Component {
     super(props);
     nav = this;
     this.state = {
-      posts: [],
+      posts: "empty",
       refreshing: false
     };
     // this.ds = ds = new ListView.DataSource({
@@ -33,7 +33,7 @@ export default class Favorite extends Component {
   }
 
   loadData = () => {
-    this.setState({ refreshing: true, posts: [] });
+    this.setState({ refreshing: true});
     var saved = firebase.database().ref("Saved");
     var posts = firebase.database().ref("Posts");
     saved
@@ -42,28 +42,38 @@ export default class Favorite extends Component {
       .equalTo(true)
       .once("value", snap => {
         if (snap.exists()) {
+          this.setState({ posts: [] });
           var data = snap.toJSON();
           Object.keys(data).forEach(key => {
             posts.child(key).once("value", post => {
               if (post.exists()) {
                 this.setState({
-                  posts: [...this.state.posts, {details: post.toJSON(), pid: key}]
+                  posts: [
+                    ...this.state.posts,
+                    { details: post.toJSON(), pid: key }
+                  ]
                 });
               }
             });
+          });
+        } else {
+          this.setState({
+            posts: "empty"
           });
         }
       });
     this.setState({ refreshing: false });
   };
-  
+
   _rowRender(data) {
     if (data) {
       return (
         <Card>
           <TouchableOpacity
             onPress={() =>
-              nav.props.navigation.navigate("ViewSavedPost", { details: data.item })
+              nav.props.navigation.navigate("ViewSavedPost", {
+                details: data.item
+              })
             }
           >
             <View style={{ flexDirection: "row", flex: 1 }}>
@@ -96,12 +106,21 @@ export default class Favorite extends Component {
         {this.state.refreshing ? (
           <ActivityIndicator size="large" color="blue" />
         ) : null}
+
         <FlatList
-          refreshControl={<RefreshControl onRefresh={this.loadData} refreshing={this.state.refreshing} />}
+          refreshControl={
+            <RefreshControl
+              onRefresh={this.loadData}
+              refreshing={this.state.refreshing}
+            />
+          }
           renderItem={this._rowRender}
-          data={this.state.posts}
-          keyExtractor={(item, index)=> index.toString()}
+          data={this.state.posts === "empty" ? [] : this.state.posts}
+          keyExtractor={(item, index) => index.toString()}
         />
+        {this.state.posts === "empty" ? (
+          <Text style={{ alignSelf: "center", position: 'absolute' }}>No Saved Post Here</Text>
+        ) : null}
       </View>
     );
   }

@@ -19,7 +19,9 @@ import favorite from "./Screens/Favorite";
 import sendPost from "./Screens/CreateMeal";
 import categories from "./Screens/Categories";
 import viewPost from "./Screens/ViewPost";
-import viewSavePost from "./Screens/ViewSavedPost"
+import viewSavePost from "./Screens/ViewSavedPost";
+import myPost from "./Screens/Meals/MyPost";
+import myPostedView from './Screens/MyPostedView'
 
 const HomeStack = createStackNavigator(
   {
@@ -45,19 +47,31 @@ const VideoStack = createStackNavigator({
     screen: videos
   }
 });
-const FavoriteStack = createStackNavigator({
-  Favorite: {
-    screen: favorite
+const FavoriteStack = createStackNavigator(
+  {
+    Favorite: {
+      screen: favorite
+    },
+    ViewSavedPost: {
+      screen: viewSavePost
+    }
   },
-  ViewSavedPost: {
-    screen : viewSavePost
-  }
-}, {initialRouteName: "Favorite"});
-const ProfileStack = createStackNavigator({
-  Profile: {
-    screen: profile
-  }
-});
+  { initialRouteName: "Favorite" }
+);
+const ProfileStack = createStackNavigator(
+  {
+    Profile: {
+      screen: profile
+    },
+    MyPost: {
+      screen: myPost
+    },
+    MyPostedView: {
+      screen: myPostedView
+    }
+  },
+  { initialRouteName: "Profile" }
+);
 
 const Taps = createBottomTabNavigator({
   Home: {

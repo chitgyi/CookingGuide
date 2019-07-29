@@ -2,6 +2,12 @@ package com.cookingguide;
 
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.azendoo.reactnativesnackbar.SnackbarPackage;
+import com.reactnative.ivpusic.imagepicker.PickerPackage;
+import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
+import io.invertase.firebase.RNFirebasePackage;
+import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.azendoo.reactnativesnackbar.SnackbarPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 
@@ -46,12 +52,12 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new VectorIconsPackage(),
             new SnackbarPackage(),
             new PickerPackage(),
+            new RNGestureHandlerPackage(),
             new RNFirebasePackage(),
             new FBSDKPackage(mCallbackManager),
-            new VectorIconsPackage(),
-            new RNGestureHandlerPackage(),
             new RNFirebaseAuthPackage(),
             new RNFirebaseDatabasePackage(),
             new RNFirebaseStoragePackage()

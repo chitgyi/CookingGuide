@@ -13,7 +13,6 @@
     "react": "16.6.3",
     "react-native": "0.57.8",
     "react-native-app-intro-slider": "^2.0.1",
-    "react-native-collapsingtoolbar": "^1.0.3",
     "react-native-fbsdk": "^0.8.0",
     "react-native-firebase": "^5.2.1",
     "react-native-gesture-handler": "^1.0.12",

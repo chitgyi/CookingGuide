@@ -157,9 +157,9 @@ export default class Home extends Component {
               borderRadius: 3
             }}
             onPress={() => {
-              this.props.navigation.navigate("ViewPost", {
-                success: "Successfully posted!"
-              });
+              // this.props.navigation.navigate("ViewPost", {
+              //   success: "Successfully posted!"
+              // });
             }}
           >
             <Text style={{ color: "white" }}>See All</Text>
