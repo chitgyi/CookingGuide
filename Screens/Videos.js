@@ -16,6 +16,7 @@ export default class Videos extends Component {
     filterItems = (needle) => {
         this.setState({ data: data.filter(item => item.indexOf(needle) >= 0) });
     }
+    
     _rowRender(item) {
         return (<Card><CardItem><Text style={{ fontSize: 16, textAlign: "justify" }}>{item.item}</Text></CardItem></Card>)
     }
