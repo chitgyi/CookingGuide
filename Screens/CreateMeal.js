@@ -6,7 +6,10 @@ import {
     ScrollView,
     BackHandler,
     Alert,
-    Button
+    Button,
+    ToastAndroid,
+    View,
+    ActivityIndicator
 } from "react-native";
 import {
     Item,
@@ -15,13 +18,14 @@ import {
     Textarea,
     Text,
     Picker,
-    Icon, Root, Toast
+    Icon
 } from "native-base";
 import { HeaderBackButton } from "react-navigation";
 import ImagePicker from "react-native-image-crop-picker";
 import uuid from "react-native-uuid";
 import firebase from "react-native-firebase";
 import Spinner from "react-native-loading-spinner-overlay";
+import { Dialog } from "react-native-simple-dialogs";
 
 export default class SendPost extends Component {
     static navigationOptions = ({ navigation }) => ({
@@ -104,15 +108,13 @@ export default class SendPost extends Component {
                                         displayName: firebase.auth().currentUser.displayName,
                                         foodType: this.state.selectedValue
                                     });
-                                Toast.show({ text: "Created Meal Successfully!", duration: 2000, type: "success" })
+                                //Toast.show({ text: "Created Meal Successfully!", duration: 2000, type: "success" })
+                                ToastAndroid.show("Created Meal Successfully!", 2500)
                                 this._goBack()
                             } else {
                                 Alert.alert("Unable to upload photo");
                             }
                         })
-                        .catch(error => {
-                            Alert.alert("An error occurring!");
-                        });
                 } else {
                     alert("Enter your food details");
                 }
@@ -127,11 +129,23 @@ export default class SendPost extends Component {
     render() {
         return (
             <ScrollView horizontal={false} style={{ flex: 1 }}>
-                <Spinner
+                {/* <Spinner
                     visible={this.state.loading}
                     textContent={"Creating Meal"}
                     textStyle={{ color: "blue" }}
-                />
+                /> */}
+                <Dialog visible={this.state.loading}>
+                    <StatusBar
+                        barStyle="light-content"
+                        backgroundColor="rgba(0,0,0,.7)"
+                    />
+                    <View style={{ flexDirection: "row", padding: 10 }}>
+                        <ActivityIndicator size="large" color="red" />
+                        <View style={{ justifyContent: "center" }}>
+                            <Text style={{ color: "#000", fontSize: 14 }}>Uploading..</Text>
+                        </View>
+                    </View>
+                </Dialog>
                 <StatusBar barStyle="dark-content" backgroundColor="white" />
                 <Content padder>
                     <TouchableOpacity
