@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, ScrollView, View, Text, StatusBar, Button } from "react-native";
+import { Image, ScrollView, View, Text, StatusBar, ToastAndroid, Alert } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import firebase from "react-native-firebase";
 import { CardItem, Left, Body, Thumbnail } from "native-base";
@@ -116,6 +116,22 @@ export default class ViewPost extends Component {
         this.setState({ active: snap.val() ? snap.val().like : false });
       });
   }
+
+  report = () => {
+    firebase
+      .database()
+      .ref("Reports")
+      .push({
+        uid: firebase.auth().currentUser.uid,
+        pid: this.props.navigation.state.params.details.pid
+      })
+      .then(res => {
+        ToastAndroid.show("Reported!", 2500)
+      }).catch(err=> {
+        ToastAndroid.show("Error", 2500)
+      })
+  };
+
   componentDidMount() {
     firebase
       .database()
@@ -124,10 +140,9 @@ export default class ViewPost extends Component {
       .child(this.props.navigation.state.params.details.pid)
       .once("value", snap => {
         let cond = snap.val() ? snap.val().saved : false;
-        this.setState({ saved: cond});
+        this.setState({ saved: cond });
       });
   }
-
 
   render() {
     return (
@@ -215,7 +230,30 @@ export default class ViewPost extends Component {
               style={{ marginLeft: 15 }}
             />
           </View>
-          <Icon name="frown" size={30} color="#4f4e4d" />
+          <Icon
+            name="frown"
+            size={30}
+            color="#4f4e4d"
+            onPress={() => {
+              Alert.alert(
+                "Report!",
+                "This post is spam post or not interested?",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => {},
+                    style: "cancel"
+                  },
+                  {
+                    text: "Yes",
+                    onPress: () => {
+                      this.report();
+                    }
+                  }
+                ]
+              );
+            }}
+          />
         </View>
         <Text
           style={{

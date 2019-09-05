@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Image, ScrollView, View, Text, StatusBar, Button } from "react-native";
+import { Image, ScrollView, View, Text, StatusBar, Alert, ToastAndroid } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import firebase from "react-native-firebase";
 import { CardItem, Left, Body, Thumbnail } from "native-base";
@@ -68,7 +68,21 @@ export default class ViewPost extends Component {
       return Math.round(dateDiff / msPerMonth) + " year ago";
     }
   };
-
+  report = () => {
+    firebase
+      .database()
+      .ref("Reports")
+      .push({
+        uid: firebase.auth().currentUser.uid,
+        pid: this.props.navigation.state.params.details.pid
+      })
+      .then(res => {
+        ToastAndroid.show("Reported!", 2000);
+      })
+      .catch(err => {
+        ToastAndroid.show("Error", 2000);
+      });
+  };
   isLiked = async like => {
     await firebase
       .database()
@@ -125,9 +139,7 @@ export default class ViewPost extends Component {
         this.setState({ active: snap.val() ? snap.val().like : false });
       });
   }
-  componentDidMount() {
-    
-  }
+  componentDidMount() {}
 
   render() {
     return (
@@ -143,15 +155,11 @@ export default class ViewPost extends Component {
             />
             <Body>
               <Text style={{ color: "#000" }}>
-                {
-                  this.props.navigation.state.params.details.details
-                    .displayName
-                }
+                {this.props.navigation.state.params.details.details.displayName}
               </Text>
               <Text style={{ fontSize: 12 }}>
                 {this.dateDiff(
-                  this.props.navigation.state.params.details.details
-                    .createdAt
+                  this.props.navigation.state.params.details.details.createdAt
                 )}
               </Text>
             </Body>
@@ -220,7 +228,30 @@ export default class ViewPost extends Component {
               style={{ marginLeft: 15 }}
             />
           </View>
-          <Icon name="frown" size={30} color="#4f4e4d" />
+          <Icon
+            name="frown"
+            size={30}
+            color="#4f4e4d"
+            onPress={() => {
+              Alert.alert(
+                "Report!",
+                "This post is spam post or not interested?",
+                [
+                  {
+                    text: "Cancel",
+                    onPress: () => {},
+                    style: "cancel"
+                  },
+                  {
+                    text: "Yes",
+                    onPress: () => {
+                      this.report();
+                    }
+                  }
+                ]
+              );
+            }}
+          />
         </View>
         <Text
           style={{

@@ -45,7 +45,7 @@ const HomeStack = createStackNavigator(
       screen: CatView
     },
     ViewCatItem: {
-      screen: viewSavePost
+      screen: viewPost
     }
   },
   { initialRouteName: "Home" }
@@ -59,7 +59,7 @@ const CategoriesStack = createStackNavigator(
       screen: CatView
     },
     ViewCatItem: {
-      screen: viewSavePost
+      screen: viewPost
     }
   },
   { initialRouteName: "Categories" }

@@ -14,9 +14,9 @@ import { Card, Root } from "native-base";
 
 var nav;
 export default class CatView extends Component {
-  static navigationOptions = ({navigation})=>({
+  static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params.details.text
-  })
+  });
   constructor(props) {
     super(props);
     nav = this;
@@ -53,17 +53,15 @@ export default class CatView extends Component {
               profilePhoto: `${val[value].profilePhoto}`
             });
           });
-           this.setState({ posts: res, refreshing: false });
+          this.setState({ posts: res, refreshing: false });
         } else {
-           this.setState({ posts: "empty", refreshing: false });
+          this.setState({ posts: "empty", refreshing: false });
         }
-
-       
       });
   };
 
   componentWillReceiveProps() {
-    this.loadData()
+    this.loadData();
   }
   _rowRender(data) {
     return (
@@ -71,7 +69,7 @@ export default class CatView extends Component {
         <TouchableOpacity
           onPress={() =>
             nav.props.navigation.navigate("ViewCatItem", {
-              details: {details: data.item}
+              details: data.item
             })
           }
         >
@@ -85,7 +83,6 @@ export default class CatView extends Component {
                 alignSelf: "center",
                 textAlign: "justify",
                 marginLeft: 10,
-                
                 color: "#000"
               }}
             >
