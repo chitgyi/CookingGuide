@@ -64,6 +64,7 @@ export default class Home extends Component {
         .on("value", data => {
           let val = data.val();
           let res = [];
+          if(data.exists()){
           Object.keys(val).forEach(value => {
             res.push({
               pid: value,
@@ -76,7 +77,7 @@ export default class Home extends Component {
               profilePhoto: `${val[value].profilePhoto}`
             });
           });
-
+        }
           this.setState({ post1: ds.cloneWithRows(res) });
         });
     } catch (error) {
