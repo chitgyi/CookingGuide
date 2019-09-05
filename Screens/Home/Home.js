@@ -64,20 +64,20 @@ export default class Home extends Component {
         .on("value", data => {
           let val = data.val();
           let res = [];
-          if(data.exists()){
-          Object.keys(val).forEach(value => {
-            res.push({
-              pid: value,
-              uid: `${val[value].uid}`,
-              title: `${val[value].title}`,
-              postBody: `${val[value].postBody}`,
-              url: `${val[value].url}`,
-              createdAt: `${val[value].createdAt}`,
-              displayName: `${val[value].displayName}`,
-              profilePhoto: `${val[value].profilePhoto}`
+          if (data.exists()) {
+            Object.keys(val).forEach(value => {
+              res.push({
+                pid: value,
+                uid: `${val[value].uid}`,
+                title: `${val[value].title}`,
+                postBody: `${val[value].postBody}`,
+                url: `${val[value].url}`,
+                createdAt: `${val[value].createdAt}`,
+                displayName: `${val[value].displayName}`,
+                profilePhoto: `${val[value].profilePhoto}`
+              });
             });
-          });
-        }
+          }
           this.setState({ post1: ds.cloneWithRows(res) });
         });
     } catch (error) {
@@ -93,18 +93,20 @@ export default class Home extends Component {
         .on("value", data => {
           let val = data.val();
           let res = [];
-          Object.keys(val).forEach(value => {
-            res.push({
-              pid: value,
-              uid: `${val[value].uid}`,
-              title: `${val[value].title}`,
-              postBody: `${val[value].postBody}`,
-              url: `${val[value].url}`,
-              createdAt: `${val[value].createdAt}`,
-              displayName: `${val[value].displayName}`,
-              profilePhoto: `${val[value].profilePhoto}`
+          if (data.exists()) {
+            Object.keys(val).forEach(value => {
+              res.push({
+                pid: value,
+                uid: `${val[value].uid}`,
+                title: `${val[value].title}`,
+                postBody: `${val[value].postBody}`,
+                url: `${val[value].url}`,
+                createdAt: `${val[value].createdAt}`,
+                displayName: `${val[value].displayName}`,
+                profilePhoto: `${val[value].profilePhoto}`
+              });
             });
-          });
+          }
           this.setState({ post2: ds2.cloneWithRows(res) });
         });
     } catch (error) {

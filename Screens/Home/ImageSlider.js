@@ -17,22 +17,22 @@ export default class ImageSlider extends Component {
       {
         text: "အသုတ်စုံပြုလုပ်နည်းများ",
         type: "type3",
-        img: require("./../../Images/type3.png")
+        img: require("./../../Images/type3.jpg")
       },
       {
         text: "အသား/ငါး ကြော်/ပေါင်း",
         type: "type4",
-        img: require("./../../Images/type4.png")
+        img: require("./../../Images/type4.jpg")
       },
       {
         text: "မုန့်လုပ်နည်းများ",
         type: "type5",
-        img: require("./../../Images/type5.png")
+        img: require("./../../Images/type5.jpg")
       },
       {
         text: "ဟင်းရည်လုပ်နည်းများ",
         type: "type6",
-        img: require("./../../Images/type6.png")
+        img: require("./../../Images/type6.jpg")
       }
     ];
     return (

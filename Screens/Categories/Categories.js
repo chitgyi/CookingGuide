@@ -18,32 +18,32 @@ export default class Categories extends Component {
     this.state = {
       data: [
         {
-          img: require("./../../Images/type1.png"),
+          img: require("./../../Images/type1.jpg"),
           text: "အသား/ငါး ဟင်းများ",
           type: "type1"
         },
         {
-          img: require("./../../Images/type2.png"),
+          img: require("./../../Images/type2.jpg"),
           text: "အသီးအရွက် ဟင်းများ",
           type: "type2"
         },
         {
-          img: require("./../../Images/type3.png"),
+          img: require("./../../Images/type3.jpg"),
           text: "အသုတ်စုံပြုလုပ်နည်းများ",
           type: "type3"
         },
         {
-          img: require("./../../Images/type4.png"),
+          img: require("./../../Images/type4.jpg"),
           text: "အသား/ငါး ကြော်/ပေါင်း",
           type: "type4"
         },
         {
-          img: require("./../../Images/type5.png"),
+          img: require("./../../Images/type5.jpg"),
           text: "မုန့်လုပ်နည်းများ",
           type: "type5"
         },
         {
-          img: require("./../../Images/type6.png"),
+          img: require("./../../Images/type6.jpg"),
           text: "ဟင်းရည်လုပ်နည်းများ",
           type: "type6"
         }
