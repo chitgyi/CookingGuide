@@ -4,21 +4,23 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   TouchableHighlight,
+  ActivityIndicator,
   Image,
   Alert,
   StatusBar
 } from "react-native";
+import { Dialog } from "react-native-simple-dialogs";
 import { AccessToken, LoginManager, LoginButton } from "react-native-fbsdk";
 import firebase from "react-native-firebase";
 import Icon from "react-native-vector-icons/FontAwesome";
 export default class LoginView extends Component {
   constructor(props) {
     super(props);
-    state = {
+    this.state = {
       email: "",
-      password: ""
+      password: "",
+      loading: false
     };
   }
 
@@ -31,24 +33,57 @@ export default class LoginView extends Component {
       );
       await firebase.auth().signInWithCredential(credential);
     } catch (e) {
-      alert("Login failed, try again!" + e.message);
+      Alert.alert("Failed", "Login failed, try again!" + e.message);
     }
   }
 
   onClickListener = viewId => {
-    Alert.alert("Alert", "Button pressed " + viewId);
+    //Alert.alert("Alert", "Button pressed " + viewId);
+    if (this.state.email && this.state.password) {
+      this.setState({ loading: true });
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then(res => {
+          if (res.user.emailVerified) {
+            this.setState({ loading: false });
+            this.props.navigation.navigate("Home");
+          } else {
+            this.setState({ loading: false });
+            alert("Please check your email and verify!");
+          }
+        })
+        .catch(err => {
+          this.setState({ loading: false });
+          Alert.alert("Login failed", err.code.substring(5));
+        });
+    } else {
+      Alert.alert("Please fill in blank!");
+    }
   };
-
+  forget= ()=> {
+    this.props.navigation.navigate("Forget")
+  }
   render() {
     return (
       <View style={styles.container}>
+        <Dialog visible={this.state.loading}>
+          <StatusBar
+            barStyle="light-content"
+            backgroundColor="rgba(0,0,0,.7)"
+          />
+          <View style={{ flexDirection: "row", padding: 10 }}>
+            <ActivityIndicator size="large" color="red" />
+            <View style={{ justifyContent: "center" }}>
+              <Text style={{ color: "#000", fontSize: 14 }}>Logging in...</Text>
+            </View>
+          </View>
+        </Dialog>
         <StatusBar backgroundColor="#DCDCDC" barStyle="dark-content" />
         <View style={styles.inputContainer}>
           <Image
             style={styles.inputIcon}
-            source={{
-              uri: "https://png.icons8.com/message/ultraviolet/50/3498db"
-            }}
+            source={require("./../../Images/gmail.png")}
           />
           <TextInput
             style={styles.inputs}
@@ -62,9 +97,7 @@ export default class LoginView extends Component {
         <View style={styles.inputContainer}>
           <Image
             style={styles.inputIcon}
-            source={{
-              uri: "https://png.icons8.com/key-2/ultraviolet/50/3498db"
-            }}
+            source={require("./../../Images/password.png")}
           />
           <TextInput
             style={styles.inputs}
@@ -85,22 +118,27 @@ export default class LoginView extends Component {
           style={[styles.buttonContainer, styles.loginButton]}
           onPress={this.facebookLogin}
         >
-          <View style={{flexDirection: "row"}}>
-            <Icon name="facebook" size={25} color="white" style={{marginRight: 10}} />
+          <View style={{ flexDirection: "row" }}>
+            <Icon
+              name="facebook"
+              size={25}
+              color="white"
+              style={{ marginRight: 10 }}
+            />
             <Text style={styles.loginText}>Facebook Login</Text>
           </View>
         </TouchableHighlight>
 
         <TouchableHighlight
           style={styles.buttonContainer}
-          onPress={() => this.onClickListener("restore_password")}
+          onPress={() => this.forget()}
         >
           <Text>Forgot your password?</Text>
         </TouchableHighlight>
 
         <TouchableHighlight
           style={styles.buttonContainer}
-          onPress={() => this.onClickListener("register")}
+          onPress={() => this.props.navigation.navigate("Register")}
         >
           <Text>Register</Text>
         </TouchableHighlight>
@@ -121,8 +159,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderRadius: 30,
     borderBottomWidth: 1,
-    width: 250,
-    height: 45,
+    width: 280,
+    height: 50,
     marginBottom: 20,
     flexDirection: "row",
     alignItems: "center"
@@ -140,12 +178,12 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   buttonContainer: {
-    height: 45,
+    height: 50,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
-    width: 250,
+    width: 280,
     borderRadius: 30
   },
   loginButton: {

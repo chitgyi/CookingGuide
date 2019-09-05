@@ -44,6 +44,12 @@ export default class Home extends Component {
   _myPost = () => {
     this.props.navigation.navigate("MyPost");
   };
+  _about = () => {
+    this.props.navigation.navigate("About");
+  };
+  _feedback = () => {
+    this.props.navigation.navigate("Feedback");
+  };
 
   render() {
     return (
@@ -81,15 +87,18 @@ export default class Home extends Component {
               </Right>
             </CardItem>
           </TouchableOpacity>
-          <CardItem bordered>
-            <Left>
-              <Icons name="feedback" size={30} />
-              <Text style={{ marginLeft: 7, color: "#000" }}>Feedback</Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </CardItem>
+          <TouchableOpacity onPress={this._feedback}>
+            <CardItem bordered>
+              <Left>
+                <Icons name="feedback" size={30} />
+                <Text style={{ marginLeft: 7, color: "#000" }}>Feedback</Text>
+              </Left>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </CardItem>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._about}>
           <CardItem bordered>
             <Left>
               <Icons name="error" size={30} />
@@ -101,15 +110,8 @@ export default class Home extends Component {
               <Icon name="arrow-forward" />
             </Right>
           </CardItem>
-          <CardItem bordered>
-            <Left>
-              <Icons name="share" size={30} />
-              <Text style={{ marginLeft: 7, color: "#000" }}>Share App</Text>
-            </Left>
-            <Right>
-              <Icon name="arrow-forward" />
-            </Right>
-          </CardItem>
+          </TouchableOpacity>
+         
         </Card>
         {/* <Text> Profile {JSON.stringify(this.state.currentUser)+this.state.loading} woo</Text> */}
         <Button
