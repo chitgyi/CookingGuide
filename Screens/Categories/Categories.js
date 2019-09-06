@@ -29,7 +29,7 @@ export default class Categories extends Component {
         },
         {
           img: require("./../../Images/type3.jpg"),
-          text: "အသုတ်စုံပြုလုပ်နည်းများ",
+          text: "အသုပ်စုံပြုလုပ်နည်းများ",
           type: "type3"
         },
         {

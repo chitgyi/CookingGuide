@@ -194,7 +194,7 @@ export default class SendPost extends Component {
             >
               <Picker.Item label="အသား/ငါး" value="type1" />
               <Picker.Item label="အသီးအရွက်" value="type2" />
-              <Picker.Item label="အသုတ်" value="type3" />
+              <Picker.Item label="အသုပ်" value="type3" />
               <Picker.Item label="အသား/ငါး ကြော်/ပေါင်း" value="type4" />
               <Picker.Item label="မုန့်" value="type5" />
               <Picker.Item label="ဟင်းရည်" value="type6" />

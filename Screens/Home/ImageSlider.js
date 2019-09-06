@@ -15,7 +15,7 @@ export default class ImageSlider extends Component {
   render() {
     const res = [
       {
-        text: "အသုတ်စုံပြုလုပ်နည်းများ",
+        text: "အသုပ်စုံပြုလုပ်နည်းများ",
         type: "type3",
         img: require("./../../Images/type3.jpg")
       },
